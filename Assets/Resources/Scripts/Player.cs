@@ -4,7 +4,8 @@ using System.Collections;
 public class Player : MonoBehaviour
 {
 		public Object cubePrefab;
-		public Transform currentCube;
+		public Transform currentMainCube;
+		public Transform currentInvisibleCube;
 
 		public AudioClip jumpSound;
 		public AudioClip landedSound;
@@ -42,21 +43,27 @@ public class Player : MonoBehaviour
 						lastTimeHitKey = Time.time;
 						var gh = FindObjectOfType<GameHandler> ();
 						bool canAdd = true;
-						if (currentCube == null)
+						if (currentInvisibleCube == null)
 								return;
-						foreach (var cube in gh.cubes) {
-								if (cube.transform.position == currentCube.position) {
+						var currentCubeScript = currentMainCube.GetComponent<Cube> ();
+//						var currentInvisibleCubeScript = currentMainCube.GetComponent<Cube> ();
+						Debug.Log (currentCubeScript);
+						foreach (var cube in currentCubeScript.cubes) {// gh.cubes) {
+								if (cube.transform.position == currentInvisibleCube.position) {
 										canAdd = false;
 										break;
 								}
 						}
 //						print (canAdd + " " + gh.canAddCube);
 						if (canAdd) {
-								if (gh.canAddCube) {
-										GameObject go = (GameObject)GameObject.Instantiate (cubePrefab, currentCube.position, Quaternion.identity);
+								if (currentCubeScript.canAddCube) {//if (gh.canAddCube) {
+										GameObject go = (GameObject)GameObject.Instantiate (cubePrefab, currentInvisibleCube.position, Quaternion.identity);
+										go.transform.parent = currentMainCube;
 										var cube = go.GetComponent<Cube> ();
 										cube.SetSparkleState (false);
-										gh.AddCube (cube);
+										currentCubeScript.AddCube (cube);
+//										cube.AddCube (cube);
+//										gh.AddCube (cube);
 										AudioSource.PlayClipAtPoint (buildCubeSound, transform.position);
 								}
 						}

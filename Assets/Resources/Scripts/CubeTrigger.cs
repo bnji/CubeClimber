@@ -28,11 +28,16 @@ public class CubeTrigger : MonoBehaviour
 	
 		void OnTriggerStay (Collider collider)
 		{
-				gh.canAddCube = true;
+				var mainCubeScript = mainCube.GetComponent<Cube> ();
+				if (mainCubeScript != null) {
+						mainCubeScript.canAddCube = true;
+				}
+//				gh.canAddCube = true;
 				var player = collider.GetComponent<Player> ();
 				// Set current invisible cube the player is standing on
 				if (player != null) {
-						player.currentCube = invisibleCube;
+						player.currentMainCube = mainCube;
+						player.currentInvisibleCube = invisibleCube;
 				}
 		}
 	
@@ -79,11 +84,13 @@ public class CubeTrigger : MonoBehaviour
 				var mainCubeScript = mainCube.GetComponent<Cube> ();
 				var invisibleCubeScript = invisibleCube.GetComponent<CubeInvisible> ();
 
-				gh.canAddCube = false;
+
+//				gh.canAddCube = false;
 		
 				if (mainCubeScript != null) {// && mainCubeScript.canWalkOnInvisibleCubes) {
 //						lastTimeEntered = Time.time;
 			
+						mainCubeScript.canAddCube = true;
 						if (mainCubeScript.lastInvisibleCube != null) {// && ((Time.time - lastTimeEntered) * 1000f > 250f)) {
 
 //				if (mainCubeScript.lastInvisibleCube != null) {

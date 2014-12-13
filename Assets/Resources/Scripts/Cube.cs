@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class Cube : MonoBehaviour
 {
@@ -23,6 +24,21 @@ public class Cube : MonoBehaviour
 		public void SetSparkleState (bool enabled)
 		{
 				sparkles.gameObject.SetActive (enabled);
+		}
+
+	
+		public List<Cube> cubes;
+	
+		public bool canAddCube = false;
+	
+		public void AddCube (Cube cube)
+		{
+				cubes.Add (cube);
+		}
+	
+		public void RemoveCube (Cube cube)
+		{
+				cubes.Remove (cube);
 		}
 
 		// Use this for initialization
