@@ -2,8 +2,15 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class Cube : MonoBehaviour
+public abstract class CubeBase : MonoBehaviour
 {
+
+}
+
+public class Cube : CubeBase, IDestroyable
+{
+
+		public Color[] colors;
 
 		public Transform CubeN;
 		public Transform CubeNE;
@@ -14,10 +21,9 @@ public class Cube : MonoBehaviour
 		public Transform CubeW;
 		public Transform CubeNW;
 
-		public bool canWalkOnInvisibleCubes = false;
-	
-		public CubeInvisible lastInvisibleCube;
-		public CubeInvisible currentInvisibleCube;
+		public bool CanWalkOnInvisibleCubes { get; set; }
+		public CubeInvisible LastInvisibleCube { get; set; }
+		public CubeInvisible CurrentInvisibleCube { get; set; }
 		public Transform sparkles;
 
 
@@ -26,41 +32,57 @@ public class Cube : MonoBehaviour
 				sparkles.gameObject.SetActive (enabled);
 		}
 
+//		public void SetVisible (bool visible)
+//		{
+//				transform.GetComponent<MeshRenderer> ().enabled = visible;
+//		}
 	
 		public List<Cube> cubes;
-	
-		public bool canAddCube = false;
 	
 		public void AddCube (Cube cube)
 		{
 				cubes.Add (cube);
 		}
 	
-		public void RemoveCube (Cube cube)
+		private void RemoveCube (Cube cube)
 		{
+//				foreach (var item in cube.cubes) {
+//						item.RemoveCube ();
+//				}
 				cubes.Remove (cube);
 		}
 
-		// Use this for initialization
-		void Start ()
+		public void RemoveCube ()
 		{
-	
+				RemoveCube (this);
+				Destroy (gameObject);
 		}
-	
-		// Update is called once per frame
-		void Update ()
-		{
-	
-		}
-	
-//		void OnCollisionEnter (Collision collision)
-//		{
-//				Debug.Log (collision.transform.tag);
-//			
-//		}
 
-//		void OnTriggerStay (Collider collider)
-//		{
-//				Debug.Log (collider.transform.name);
-//		}
+	#region IDestroyable implementation
+
+		public void Destroy ()
+		{
+				//RemoveCube ();
+		}
+
+	#endregion
+
+		public bool CanAdd ()
+		{
+				bool canAdd = true;
+				foreach (var cube in cubes) {
+//						Debug.Log (cube.name);
+						if (cube != null && cube.transform.position == transform.position) {
+								canAdd = false;
+								break;
+						}
+				}
+				return canAdd;
+		}
+
+		public Cube ()
+		{
+				cubes = new List<Cube> ();
+				CanWalkOnInvisibleCubes = false;
+		}
 }

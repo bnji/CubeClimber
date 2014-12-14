@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 
 public class CubeMainTrigger : MonoBehaviour
@@ -22,7 +22,7 @@ public class CubeMainTrigger : MonoBehaviour
 		{
 				var mainCubeScript = mainCube.GetComponent<Cube> ();
 				if (mainCubeScript != null) {
-						mainCubeScript.canWalkOnInvisibleCubes = true;
+						mainCubeScript.CanWalkOnInvisibleCubes = true;
 				}
 		}
 }

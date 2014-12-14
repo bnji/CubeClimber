@@ -22,52 +22,58 @@ public class Player : MonoBehaviour
 		void OnJump ()
 		{
 				AudioSource.PlayClipAtPoint (jumpSound, transform.position);
-//				print ("Jump");
+
+
+				if (currentMainCube != null) {
+						var currentCubeScript = currentMainCube.GetComponent<Cube> ();
+						var cubeTriggers = currentCubeScript.GetComponentsInChildren<CubeTrigger> ();
+						foreach (var item in cubeTriggers) {
+								item.CanShowInvisibleCube = false;
+						}
+						foreach (Transform child in currentMainCube.transform) {
+								GameObject.Destroy (child.gameObject);
+						}
+						var rb = currentMainCube.GetComponent<Rigidbody> ();
+						rb.isKinematic = false;
+						rb.useGravity = true;
+//						currentCubeScript.Destroy ();
+				}
 		}
 
 		void OnLand ()
 		{
 				AudioSource.PlayClipAtPoint (landedSound, transform.position);
-//				print ("Landed");
 		}
 
 		void OnFall ()
 		{
-				print ("Falling");
+//				print ("Falling");
+		}
+
+		public void BuildCube ()
+		{
+				if (currentInvisibleCube == null)
+						return;
+
+				var currentInvisibleCubeScript = currentInvisibleCube.GetComponent<CubeInvisible> ();
+				if (currentInvisibleCubeScript.BuildCube (cubePrefab)) {
+						AudioSource.PlayClipAtPoint (buildCubeSound, transform.position);
+						Debug.Log (GameObject.FindObjectOfType<GameHandler> ().CubePositions.Count);
+				}
 		}
 	
 		// Update is called once per frame
 		void Update ()
 		{
 				if (Input.GetKeyDown (KeyCode.E) && ((Time.time - lastTimeHitKey) * 1000f > 250f)) {
-						lastTimeHitKey = Time.time;
-						var gh = FindObjectOfType<GameHandler> ();
-						bool canAdd = true;
-						if (currentInvisibleCube == null)
-								return;
-						var currentCubeScript = currentMainCube.GetComponent<Cube> ();
-//						var currentInvisibleCubeScript = currentMainCube.GetComponent<Cube> ();
-						Debug.Log (currentCubeScript);
-						foreach (var cube in currentCubeScript.cubes) {// gh.cubes) {
-								if (cube.transform.position == currentInvisibleCube.position) {
-										canAdd = false;
-										break;
-								}
-						}
-//						print (canAdd + " " + gh.canAddCube);
-						if (canAdd) {
-								if (currentCubeScript.canAddCube) {//if (gh.canAddCube) {
-										GameObject go = (GameObject)GameObject.Instantiate (cubePrefab, currentInvisibleCube.position, Quaternion.identity);
-										go.transform.parent = currentMainCube;
-										var cube = go.GetComponent<Cube> ();
-										cube.SetSparkleState (false);
-										currentCubeScript.AddCube (cube);
-//										cube.AddCube (cube);
-//										gh.AddCube (cube);
+						if (currentInvisibleCube != null) {
+								var currentInvisibleCubeScript = currentInvisibleCube.GetComponent<CubeInvisible> ();
+								if (currentInvisibleCubeScript.BuildCube (cubePrefab)) {
 										AudioSource.PlayClipAtPoint (buildCubeSound, transform.position);
+										Debug.Log (GameObject.FindObjectOfType<GameHandler> ().CubePositions.Count);
+										lastTimeHitKey = Time.time;
 								}
 						}
-
 				}
 
 //				Vector3 fwd = transform.TransformDirection (Vector3.forward);
@@ -83,10 +89,4 @@ public class Player : MonoBehaviour
 ////						print (rayCastHit.transform.name);
 //				}
 		}
-
-//		void OnCollisionEnter (Collision collision)
-//		{
-//				Debug.Log (collision.transform.tag);
-//		
-//		}
 }
