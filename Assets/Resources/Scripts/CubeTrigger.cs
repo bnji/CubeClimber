@@ -32,13 +32,14 @@ public class CubeTrigger : MonoBehaviour
 	
 		void OnTriggerStay (Collider collider)
 		{
-				if (((Time.time - lastTimeEntered) * 1000f > PlayerPrefs.GetFloat ("BuildCubeAutoInterval")) && canBuild) {
-						var player = GameObject.FindObjectOfType<Player> ();
-						if (player != null && canBuild) {
-								player.BuildCube ();
-								canBuild = false;
-						}
-				}
+//				return;
+//				if (Helper.IsTimeUp (PlayerPrefs.GetFloat ("BuildCubeAutoInterval")) && canBuild) {
+//						var player = GameObject.FindObjectOfType<Player> ();
+//						if (player != null && canBuild) {
+//								player.BuildCube ();
+//								canBuild = false;
+//						}
+//				}
 		}
 
 		CubeInvisible invisibleCubeScript;
@@ -51,11 +52,12 @@ public class CubeTrigger : MonoBehaviour
 
 				var player = collider.GetComponent<Player> ();
 				var mainCubeScript = mainCube.GetComponent<Cube> ();
+				Debug.Log (mainCubeScript.transform.name);
 				invisibleCubeScript = invisibleCube.GetComponent<CubeInvisible> ();
 				// Set current invisible cube the player is standing on
 				if (player != null) {
-						player.currentMainCube = mainCube;
-						player.currentInvisibleCube = invisibleCube;
+						player.CurrentMainCube = mainCube;
+						player.CurrentInvisibleCube = invisibleCube;
 				}
 
 				// If player can walk on invisible cubes (has landed (stayed) on the main cube)

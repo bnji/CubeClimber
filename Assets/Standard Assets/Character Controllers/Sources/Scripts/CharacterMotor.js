@@ -437,7 +437,7 @@ private function ApplyGravityAndJumping (velocity : Vector3) {
 			
 			// Apply the jumping force to the velocity. Cancel any vertical velocity first.
 			velocity.y = 0;
-			velocity += jumping.jumpDir * CalculateJumpVerticalSpeed (jumping.baseHeight);
+			velocity += jumping.jumpDir * CalculateJumpVerticalSpeed (jumping.baseHeight);// + jumpPower);
 			
 			// Apply inertia from platform
 			if (movingPlatform.enabled &&
@@ -447,16 +447,24 @@ private function ApplyGravityAndJumping (velocity : Vector3) {
 				movement.frameVelocity = movingPlatform.platformVelocity;
 				velocity += movingPlatform.platformVelocity;
 			}
-			
+//			jumpPower = 0f;
 			SendMessage("OnJump", SendMessageOptions.DontRequireReceiver);
 		}
 		else {
+//			if(inputJump && jumpPower <= maxJumpPower) {
+//				jumpPower += 0.01f;
+//				Debug.Log(jumpPower);
+//			}
+//			SendMessage("OnHoldingJump", jumpPower, SendMessageOptions.DontRequireReceiver);
 			jumping.holdingJumpButton = false;
 		}
 	}
 	
 	return velocity;
 }
+
+//var jumpPower : float = 0f;
+//var maxJumpPower : float = 20f;
 
 function OnControllerColliderHit (hit : ControllerColliderHit) {
 	if (hit.normal.y > 0 && hit.normal.y > groundNormal.y && hit.moveDirection.y < 0) {

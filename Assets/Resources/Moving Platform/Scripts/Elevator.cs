@@ -146,9 +146,9 @@ public class Elevator : MonoBehaviour
 						if (newValue < smallestValue) {
 								smallestValue = newValue;
 						} else {
-								Debug.Log (isActive);
+//								Debug.Log (isActive);
 								ChangeDirection ();
-								Debug.Log (isActive);
+//								Debug.Log (isActive);
 								smallestValue = float.MaxValue;
 						}
 						transform.Translate (distance * Time.deltaTime * speed);

@@ -33,12 +33,18 @@ public class CubeInvisible : CubeBase
 
 		public void SetRandomColor (Color[] colors)
 		{
-				Color color = colors [Random.Range (0, colors.Length)];
-				if (lastUsedColor.Equals (color)) {
-						SetRandomColor (colors);
+				var index = Random.Range (0, colors.Length - 1);
+//				Debug.Log (index + "/" + colors.Length);
+				if (index < colors.Length) {
+						Color color = colors [index];
+						if (lastUsedColor.Equals (color)) {
+								SetRandomColor (colors);
+						} else {
+								lastUsedColor = color;
+								renderer.material.color = color;
+						}
 				} else {
-						lastUsedColor = color;
-						renderer.material.color = color;
+						SetRandomColor (colors);
 				}
 		}
 	
@@ -62,9 +68,41 @@ public class CubeInvisible : CubeBase
 						cube.renderer.material.color = renderer.material.color;
 						cube.transform.parent = transform;
 						cube.SetSparkleState (false);
+						foreach (var item in cube.GetComponentsInChildren<TriggerRotate>()) {
+								Destroy (item.gameObject);
+						}
 						mainCubeScript.AddCube (cube);
 						var gh = GameObject.FindObjectOfType<GameHandler> ();
 						gh.CubePositions.Add (cube.transform.position);
+
+			
+			
+						//hasVisibleCube = true;
+						//						foreach (var item in cube.GetComponentsInChildren<CubeInvisible>()) {
+						//								if (gh.CubePositions.Contains (item.transform.position)) {
+						//										Debug.Log (Vector3.Distance (item.transform.localPosition, cube.transform.localPosition));
+						//								}
+						//						}
+			
+			
+			
+						//						foreach (var item in cube.GetComponentsInChildren<CubeBase>()) {
+						//								Debug.Log (Vector3.Distance (item.transform.localPosition, mainCube.localPosition) + " " + item.transform.parent.name + "." + item.name + " - " + mainCube.parent.name + "." + mainCube.name);
+						//								foreach (var item2 in GetComponentsInChildren<CubeBase>()) {
+						//										var distance = Vector3.Distance (item.transform.localPosition, item2.transform.localPosition);
+						//										if (distance == 0f && item != item2)  
+						//												Debug.Log (distance + " " + item.transform.parent.name + "." + item.name + " - " + item2.transform.parent.name + "." + item2.name);
+						////										if (item.hasVisibleCube) {// && Vector3.Distance (item.transform.localPosition, item2.transform.localPosition) == 0f) {
+						////												Debug.Log (item.hasVisibleCube + " " + item2.hasVisibleCube + " " + Vector3.Distance (item.transform.localPosition, item2.transform.localPosition) + " " + item.transform.parent.name + "." + item.name + " - " + item2.transform.parent.name + "." + item2.name);
+						////										}
+						////					    {
+						////												item.GetComponentInChildren<CubeTrigger> ().isUsable = false;
+						////										}
+						////										if (item.mainCube.position == item2.transform.position) {
+						////												item.GetComponentInChildren<CubeTrigger> ().isUsable = false;
+						////										}
+						//								}
+						//						}
 						return true;
 				}
 				return false;
@@ -86,6 +124,14 @@ public class CubeInvisible : CubeBase
 		void OnTriggerEnter (Collider collider)
 		{
 				canBuild = true;
+				if (collider.transform.tag == "Player") {
+			
+						var springJoint = transform.GetComponentInChildren<SpringJoint> ();
+//						Debug.Log (springJoint);
+						if (springJoint != null) {
+								springJoint.connectedBody = collider.rigidbody;
+						}
+				}
 //				Debug.Log (this.name);
 		}
 

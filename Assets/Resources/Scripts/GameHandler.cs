@@ -4,7 +4,8 @@ using System.Collections.Generic;
 
 public class GameHandler : MonoBehaviour
 {
-
+	
+		public bool useGlobalGravity = false;
 		public List<Vector3> CubePositions;
 
 		// Use this for initialization

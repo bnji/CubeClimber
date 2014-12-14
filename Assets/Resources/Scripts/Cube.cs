@@ -67,6 +67,16 @@ public class Cube : CubeBase, IDestroyable
 
 	#endregion
 
+		void Start ()
+		{
+
+		}
+
+		// Update is called once per frame
+		void Update ()
+		{
+		}
+
 		public bool CanAdd ()
 		{
 				bool canAdd = true;
@@ -85,4 +95,5 @@ public class Cube : CubeBase, IDestroyable
 				cubes = new List<Cube> ();
 				CanWalkOnInvisibleCubes = false;
 		}
+
 }
