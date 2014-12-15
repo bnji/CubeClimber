@@ -40,15 +40,20 @@ public class Player : PlanetCitizen, IPause, IDestroyable// MonoBehaviour
 								GameObject.Destroy (child.gameObject);
 						}
 						var rb = CurrentMainCube.GetComponent<Rigidbody> ();
-						rb.isKinematic = false;
-						rb.useGravity = true;
+						if (rb != null) {
+								rb.isKinematic = false;
+								rb.useGravity = true;
+						}
 //						currentCubeScript.Destroy ();
 				}
 		}
 
 		void OnLand ()
 		{
-				AudioSource.PlayClipAtPoint (landedSound, transform.position);
+				Debug.Log ("landed");
+				if (landedSound != null) {
+						AudioSource.PlayClipAtPoint (landedSound, transform.position);
+				}
 		}
 
 		void OnFall ()

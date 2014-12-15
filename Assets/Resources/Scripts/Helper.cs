@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public static class Helper
 {
@@ -18,4 +19,17 @@ public static class Helper
 				}
 				return false;
 		}
+		
+		public static void DestroyObjectAndChildren (Transform _transform)
+		{
+				if (_transform == null)
+						return;
+				var children = new List<GameObject> ();
+				foreach (Transform child in _transform) {
+						children.Add (child.gameObject);
+				}
+				children.ForEach (child => MonoBehaviour.Destroy (child));
+				MonoBehaviour.Destroy (_transform.gameObject);
+		}
+
 }

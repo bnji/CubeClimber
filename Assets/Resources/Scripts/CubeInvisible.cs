@@ -33,9 +33,8 @@ public class CubeInvisible : CubeBase
 
 		public void SetRandomColor (Color[] colors)
 		{
-				var index = Random.Range (0, colors.Length - 1);
-//				Debug.Log (index + "/" + colors.Length);
-				if (index < colors.Length) {
+				try {
+						var index = Random.Range (0, colors.Length - 1);
 						Color color = colors [index];
 						if (lastUsedColor.Equals (color)) {
 								SetRandomColor (colors);
@@ -43,8 +42,8 @@ public class CubeInvisible : CubeBase
 								lastUsedColor = color;
 								renderer.material.color = color;
 						}
-				} else {
-						SetRandomColor (colors);
+				} catch (UnityException ex) {
+						Debug.Log (ex.Message);
 				}
 		}
 	

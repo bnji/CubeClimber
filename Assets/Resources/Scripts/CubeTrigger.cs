@@ -52,7 +52,7 @@ public class CubeTrigger : MonoBehaviour
 
 				var player = collider.GetComponent<Player> ();
 				var mainCubeScript = mainCube.GetComponent<Cube> ();
-				Debug.Log (mainCubeScript.transform.name);
+//				Debug.Log (mainCubeScript.transform.name);
 				invisibleCubeScript = invisibleCube.GetComponent<CubeInvisible> ();
 				// Set current invisible cube the player is standing on
 				if (player != null) {
