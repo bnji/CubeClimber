@@ -4,6 +4,8 @@ using System.Collections;
 public class Player : PlanetCitizen, IPause, IDestroyable// MonoBehaviour
 {
 		public Object cubePrefab;
+
+		public Transform CurrentActiveCube  { get; set; }
 		public Transform CurrentMainCube { get; set; }
 		public Transform CurrentInvisibleCube { get; set; }
 
@@ -12,6 +14,8 @@ public class Player : PlanetCitizen, IPause, IDestroyable// MonoBehaviour
 		public AudioClip buildCubeSound;
 	
 	#region IDestroyable implementation
+	
+		public bool IsDestroyable { get; set; }
 	
 		public void Destroy ()
 		{
@@ -23,28 +27,36 @@ public class Player : PlanetCitizen, IPause, IDestroyable// MonoBehaviour
 
 		void Start ()
 		{
+				gh = GameObject.FindObjectOfType<GameHandler> ();
 		}
+
+		GameHandler gh;
 
 		void OnJump ()
 		{
 				AudioSource.PlayClipAtPoint (jumpSound, transform.position);
-
-
-				if (CurrentMainCube != null) {
-						var currentCubeScript = CurrentMainCube.GetComponent<Cube> ();
-						var cubeTriggers = currentCubeScript.GetComponentsInChildren<CubeTrigger> ();
-						foreach (var item in cubeTriggers) {
-								item.CanShowInvisibleCube = false;
+//				Debug.Log (CurrentActiveCube);
+				if (CurrentActiveCube != null) {
+//			CurrentMainCube.GetComponent<Cube> ().Detach ();
+						var currentCubeScript = CurrentActiveCube.GetComponent<Cube> ();// CurrentMainCube.GetComponent<Cube> ();
+						gh.CubePositions.Remove (currentCubeScript.transform.position);
+						if ((currentCubeScript as IDestroyable).IsDestroyable) {
+//								var cubeTriggers = currentCubeScript.GetComponentsInChildren<CubeTrigger> ();
+//								foreach (var item in cubeTriggers) {
+//										item.CanShowInvisibleCube = false;
+//								}
+								foreach (Transform child in CurrentActiveCube.transform) {// CurrentMainCube.transform) {
+										gh.CubePositions.Remove (child.position);
+										GameObject.Destroy (child.gameObject);
+								}
+								GameObject.Destroy (currentCubeScript.gameObject);
+//								currentCubeScript.gameObject.SetActive (false);
+//								var rb = CurrentMainCube.GetComponent<Rigidbody> ();
+//								if (rb != null) {
+//										rb.isKinematic = false;
+//										rb.useGravity = true;
+//								}
 						}
-						foreach (Transform child in CurrentMainCube.transform) {
-								GameObject.Destroy (child.gameObject);
-						}
-						var rb = CurrentMainCube.GetComponent<Rigidbody> ();
-						if (rb != null) {
-								rb.isKinematic = false;
-								rb.useGravity = true;
-						}
-//						currentCubeScript.Destroy ();
 				}
 		}
 
@@ -63,20 +75,20 @@ public class Player : PlanetCitizen, IPause, IDestroyable// MonoBehaviour
 
 		public void BuildCube ()
 		{
+//				Debug.Log ("CurrentInvisibleCube: " + CurrentInvisibleCube);
 				if (CurrentInvisibleCube == null)
 						return;
 
 				var currentInvisibleCubeScript = CurrentInvisibleCube.GetComponent<CubeInvisible> ();
 				if (currentInvisibleCubeScript.BuildCube (cubePrefab)) {
 						AudioSource.PlayClipAtPoint (buildCubeSound, transform.position);
-						Debug.Log ("Cube count: " + GameObject.FindObjectOfType<GameHandler> ().CubePositions.Count);
 				}
 		}
 	
 		// Update is called once per frame
 		void Update ()
 		{
-				if (Input.GetKeyDown (KeyCode.E) && Helper.IsTimeUp (250f)) {
+				if (Input.GetKeyDown (KeyCode.E) && Helper.IsTimeUp (150f)) {
 						BuildCube ();
 				}
 

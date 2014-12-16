@@ -36,6 +36,7 @@ public class RotateBase : MonoBehaviour
 								transform.RotateAround (transform.position, rotateAroundAxis, angle);
 						} else {
 								canRotate = false;
+								Physics.gravity = new Vector3 (0f, -9.82f, 0f);
 						}
 				}
 		}
@@ -58,6 +59,7 @@ public class RotateBase : MonoBehaviour
 						roateSpeed = speed;
 						rotateToDegrees += degrees;
 						canRotate = true;
+						Physics.gravity = new Vector3 (0f, 0f, 0f);
 				}
 		}
 }

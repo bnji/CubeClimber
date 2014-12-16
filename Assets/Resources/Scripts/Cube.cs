@@ -9,7 +9,6 @@ public abstract class CubeBase : MonoBehaviour
 
 public class Cube : CubeBase, IDestroyable
 {
-
 		public Color[] colors;
 
 		public Transform CubeN;
@@ -59,13 +58,34 @@ public class Cube : CubeBase, IDestroyable
 		}
 
 	#region IDestroyable implementation
+	
+		public bool IsDestroyable { get; set; }
 
 		public void Destroy ()
 		{
+				
 				//RemoveCube ();
 		}
 
 	#endregion
+
+		public void Detach ()
+		{
+				if (IsDestroyable) {
+						var cubeTriggers = GetComponentsInChildren<CubeTrigger> ();
+						foreach (var item in cubeTriggers) {
+								item.CanShowInvisibleCube = false;
+						}
+						foreach (Transform child in transform) {
+								GameObject.Destroy (child.gameObject);
+						}
+						var rb = GetComponent<Rigidbody> ();
+						if (rb != null) {
+								rb.isKinematic = false;
+								rb.useGravity = true;
+						}
+				}
+		}
 
 		void Start ()
 		{

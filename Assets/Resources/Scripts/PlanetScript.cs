@@ -168,6 +168,8 @@ public class PlanetScript : AstronomicalObject, IDestroyable
 				if (planets != null && planets.Contains (ps))
 						planets.Remove (ps);
 		}
+	
+		public bool IsDestroyable { get; set; }
 
 		public void Destroy ()
 		{

@@ -25,4 +25,17 @@ public class CubeMainTrigger : MonoBehaviour
 						mainCubeScript.CanWalkOnInvisibleCubes = true;
 				}
 		}
+		void OnTriggerEnter (Collider collider)
+		{
+//				if (!CanShowInvisibleCube)
+//						return;
+//		
+//		
+				var player = collider.GetComponent<Player> ();
+//				var mainCubeScript = mainCube.GetComponent<Cube> ();
+				// Set current invisible cube the player is standing on
+				if (player != null) {
+						player.CurrentActiveCube = mainCube;
+				}
+		}
 }

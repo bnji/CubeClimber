@@ -24,29 +24,27 @@ public class PlayerExtScr : MonoBehaviour
 		private ICarriable heldItem;
 		private Vector3 startPos; // temp for debugging
 		private Camera playerCam;
+
+		public Camera weaponCamera;
+//		public AudioListener weaponAudioListener;
+		public CharacterController weaponCharacterController;
+		public MouseLook weaponMouseLook;
+//		public FPSInputController weaponsFPSInputController;
 	
 		void Awake ()
 		{
-				var camera = gameObject.GetComponentInChildren<Camera> ();
-				if (camera != null) {
-						camera.enabled = false;
-				}
-				var audioListender = gameObject.GetComponentInChildren<AudioListener> ();
-				if (audioListender != null) {
-						audioListender.enabled = false;
-				}
-				var charController = gameObject.GetComponent<CharacterController> ();
-				if (charController != null) {
-						charController.enabled = false;
-				}
-				var mouseLook = gameObject.GetComponent<MouseLook> ();
-				if (mouseLook != null) {
-						mouseLook.enabled = false;
-				}
-				var fpsInputController = gameObject.GetComponent<FPSInputController> ();
-				if (fpsInputController != null) {
-						fpsInputController.enabled = false;
-				}
+				//				var weaponCamera = gameObject.GetComponentInChildren<Camera> ();
+				weaponCamera.enabled = false;
+//		var weaponAudioListener = gameObject.GetComponentInChildren<AudioListener> ();
+//				weaponAudioListener.enabled = false;
+//				var weaponCharacterController = gameObject.GetComponent<CharacterController> ();
+//				weaponCharacterController.enabled = false;
+//		var weaponMouseLook = gameObject.GetComponent<MouseLook> ();
+				weaponMouseLook.enabled = false;
+				
+//				var weaponsFPSInputController = gameObject.GetComponent<FPSInputController> ();
+//				weaponsFPSInputController.enabled = false;
+
 //				enabled = false;
 				
 		}

@@ -49,6 +49,8 @@ public class CubeTrigger : MonoBehaviour
 				if (!CanShowInvisibleCube)
 						return;
 
+		
+				
 
 				var player = collider.GetComponent<Player> ();
 				var mainCubeScript = mainCube.GetComponent<Cube> ();
@@ -56,8 +58,10 @@ public class CubeTrigger : MonoBehaviour
 				invisibleCubeScript = invisibleCube.GetComponent<CubeInvisible> ();
 				// Set current invisible cube the player is standing on
 				if (player != null) {
+//						player.CurrentActiveCube = mainCube;
 						player.CurrentMainCube = mainCube;
 						player.CurrentInvisibleCube = invisibleCube;
+
 				}
 
 				// If player can walk on invisible cubes (has landed (stayed) on the main cube)
@@ -70,21 +74,41 @@ public class CubeTrigger : MonoBehaviour
 						} else {
 								// else set last invisible cube to current one and current invisible cube to this one
 //								mainCubeScript.lastInvisibleCube = mainCubeScript.currentInvisibleCube;
+								mainCubeScript.LastInvisibleCube = mainCubeScript.CurrentInvisibleCube;
 								mainCubeScript.CurrentInvisibleCube = invisibleCubeScript;
-								if (mainCubeScript.CurrentInvisibleCube != null) {
+
+//								if (mainCubeScript.CurrentInvisibleCube != null) {
+//										if ((Time.time - lastTimeEntered) * 1000f > 250f) {
+//												AudioSource.PlayClipAtPoint (enteredSound, transform.position);
+//												lastTimeEntered = Time.time;
+//												canBuild = true;
+//										}
+//								}
+						}
+			
+						if (player != null) {
+								bool hasCubeAtGivePosition = false;
+								var gh = GameObject.FindObjectOfType<GameHandler> ();
+								foreach (var item in gh.CubePositions) {
+										if (item.Equals (invisibleCube.position)) {
+												hasCubeAtGivePosition = true;
+												Debug.Log ("there's already a cube here");
+												break;
+										}
+								}
+								if (!hasCubeAtGivePosition) {
+//					if (mainCubeScript.CurrentInvisibleCube != null) {
 										if ((Time.time - lastTimeEntered) * 1000f > 250f) {
 												AudioSource.PlayClipAtPoint (enteredSound, transform.position);
 												lastTimeEntered = Time.time;
 												canBuild = true;
 										}
+//					}
+
+										invisibleCubeScript.SetVisible (true);
+										invisibleCubeScript.SetRandomColor ();//mainCubeScript.colors);
 								}
 						}
-			
-						if (player == null)
-								return;
-			
-						invisibleCubeScript.SetVisible (true);
-						invisibleCubeScript.SetRandomColor (mainCubeScript.colors);
 				}
 		}
 
@@ -92,15 +116,16 @@ public class CubeTrigger : MonoBehaviour
 	
 		void OnTriggerExit (Collider collider)
 		{
-				var mainCubeScript = mainCube.GetComponent<Cube> ();
-				var invisibleCubeScript = invisibleCube.GetComponent<CubeInvisible> ();
-
-				if (mainCubeScript != null) {
-						if (mainCubeScript.LastInvisibleCube != null) {
-								mainCubeScript.LastInvisibleCube = invisibleCubeScript;
-								invisibleCubeScript.SetVisible (false);
-						}
-				}
+//				var mainCubeScript = mainCube.GetComponent<Cube> ();
+//				var invisibleCubeScript = invisibleCube.GetComponent<CubeInvisible> ();
+//
+//				if (mainCubeScript != null) {
+//						if (mainCubeScript.LastInvisibleCube != null) {
+//								mainCubeScript.LastInvisibleCube = invisibleCubeScript;
+//								invisibleCubeScript.SetVisible (false);
+//						}
+//				}
+				invisibleCubeScript.SetVisible (false);
 				canBuild = false;
 		}
 }
