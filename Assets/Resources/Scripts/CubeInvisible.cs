@@ -10,21 +10,36 @@ public class CubeInvisible : CubeBase
 
 		private GameHandler gh;
 
+		private BoxCollider boxCollider;
+
 		// Use this for initialization
 		void Start ()
 		{
 				mainCubeScript = mainCube.GetComponent<Cube> ();
 				gh = GameObject.FindObjectOfType<GameHandler> ();
+				boxCollider = GetComponent<BoxCollider> ();
 		}
 	
 		// Update is called once per frame
 		void Update ()
 		{
-				if (mainCubeScript != null) {
-						if (mainCubeScript.CanWalkOnInvisibleCubes) {
-								var boxCollider = GetComponent<BoxCollider> ();
-								boxCollider.isTrigger = false;
-						}
+//				if (mainCubeScript != null) {
+//						if (mainCubeScript.CanWalkOnInvisibleCubes) {
+//								boxCollider.isTrigger = false;
+//						} else {
+//								boxCollider.isTrigger = true;
+//						}
+//				}
+		}
+
+		public void SetBoxTriggerState (bool isTrigger)
+		{
+				boxCollider.isTrigger = isTrigger;
+		}
+
+		public bool CanWalkOnBox {
+				get {
+						return boxCollider != null && !boxCollider.isTrigger;
 				}
 		}
 	
@@ -61,7 +76,9 @@ public class CubeInvisible : CubeBase
 						Debug.Log (renderer.material.color);
 						cube.transform.renderer.material.color = gh.lastUsedColor;// renderer.material.color;
 						cube.transform.parent = transform;
-						cube.SetSparkleState (false);
+//						cube.SetSparkleState (false);
+						Destroy (cube.GetComponentInChildren<GravitationalField> ().gameObject);
+						Destroy (cube.sparkles.gameObject);
 						foreach (var item in cube.GetComponentsInChildren<TriggerRotate>()) {
 								Destroy (item.gameObject);
 						}

@@ -20,7 +20,7 @@ public class Cube : CubeBase, IDestroyable
 		public Transform CubeW;
 		public Transform CubeNW;
 
-		public bool CanWalkOnInvisibleCubes { get; set; }
+//		public bool CanWalkOnInvisibleCubes { get; set; }
 		public CubeInvisible LastInvisibleCube { get; set; }
 		public CubeInvisible CurrentInvisibleCube { get; set; }
 		public Transform sparkles;
@@ -113,7 +113,7 @@ public class Cube : CubeBase, IDestroyable
 		public Cube ()
 		{
 				cubes = new List<Cube> ();
-				CanWalkOnInvisibleCubes = false;
+//				CanWalkOnInvisibleCubes = false;
 		}
 
 }

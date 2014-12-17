@@ -32,16 +32,16 @@ public class CubeTrigger : MonoBehaviour
 	
 		void OnTriggerStay (Collider collider)
 		{
-//				return;
-//				if (Helper.IsTimeUp (PlayerPrefs.GetFloat ("BuildCubeAutoInterval")) && canBuild) {
-//						var player = GameObject.FindObjectOfType<Player> ();
-//						if (player != null && canBuild) {
-//								player.BuildCube ();
-//								canBuild = false;
-//						}
-//				}
+//								if (Helper.IsTimeUp (PlayerPrefs.GetFloat ("BuildCubeAutoInterval")) && canBuild) {
+				if (Helper.IsTimeUp (25f) && canBuild) {
+						var player = GameObject.FindObjectOfType<Player> ();
+						if (player != null && canBuild) {
+								player.BuildCube ();
+								canBuild = false;
+						}
+				}
 		}
-
+	
 		CubeInvisible invisibleCubeScript;
 	
 		void OnTriggerEnter (Collider collider)
@@ -49,7 +49,7 @@ public class CubeTrigger : MonoBehaviour
 				if (!CanShowInvisibleCube)
 						return;
 
-		
+
 				
 
 				var player = collider.GetComponent<Player> ();
@@ -58,15 +58,26 @@ public class CubeTrigger : MonoBehaviour
 				invisibleCubeScript = invisibleCube.GetComponent<CubeInvisible> ();
 				// Set current invisible cube the player is standing on
 				if (player != null) {
+
 //						player.CurrentActiveCube = mainCube;
 						player.CurrentMainCube = mainCube;
 						player.CurrentInvisibleCube = invisibleCube;
 
+						var diffY = collider.transform.position.y - transform.position.y;
+						Debug.Log (diffY);
+						if (collider.transform.position.y < transform.position.y) {
+//								mainCubeScript.CanWalkOnInvisibleCubes = false;
+								invisibleCubeScript.SetBoxTriggerState (true);
+								Debug.Log ("ok");
+								return;
+						} else {
+								invisibleCubeScript.SetBoxTriggerState (false);
+						}
 				}
 
 				// If player can walk on invisible cubes (has landed (stayed) on the main cube)
 				// then set last and current invisible cube
-				if (mainCubeScript != null && mainCubeScript.CanWalkOnInvisibleCubes) {
+				if (mainCubeScript != null) {// && mainCubeScript.CanWalkOnInvisibleCubes) {
 						// If player has never touched any invisible cubes, then set both to current invisible cube
 						if (mainCubeScript.LastInvisibleCube == null && mainCubeScript.CurrentInvisibleCube == null) {
 								mainCubeScript.LastInvisibleCube = invisibleCubeScript;
@@ -116,6 +127,7 @@ public class CubeTrigger : MonoBehaviour
 	
 		void OnTriggerExit (Collider collider)
 		{
+
 //				var mainCubeScript = mainCube.GetComponent<Cube> ();
 //				var invisibleCubeScript = invisibleCube.GetComponent<CubeInvisible> ();
 //

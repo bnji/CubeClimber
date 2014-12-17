@@ -20,10 +20,10 @@ public class CubeMainTrigger : MonoBehaviour
 	
 		void OnTriggerStay (Collider collider)
 		{
-				var mainCubeScript = mainCube.GetComponent<Cube> ();
-				if (mainCubeScript != null) {
-						mainCubeScript.CanWalkOnInvisibleCubes = true;
-				}
+//				var mainCubeScript = mainCube.GetComponent<Cube> ();
+//				if (mainCubeScript != null) {
+//						mainCubeScript.CanWalkOnInvisibleCubes = true;
+//				}
 		}
 		void OnTriggerEnter (Collider collider)
 		{

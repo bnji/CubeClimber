@@ -34,30 +34,7 @@ public class Player : PlanetCitizen, IPause, IDestroyable// MonoBehaviour
 
 		void OnJump ()
 		{
-				AudioSource.PlayClipAtPoint (jumpSound, transform.position);
-//				Debug.Log (CurrentActiveCube);
-				if (CurrentActiveCube != null) {
-//			CurrentMainCube.GetComponent<Cube> ().Detach ();
-						var currentCubeScript = CurrentActiveCube.GetComponent<Cube> ();// CurrentMainCube.GetComponent<Cube> ();
-						gh.CubePositions.Remove (currentCubeScript.transform.position);
-						if ((currentCubeScript as IDestroyable).IsDestroyable) {
-//								var cubeTriggers = currentCubeScript.GetComponentsInChildren<CubeTrigger> ();
-//								foreach (var item in cubeTriggers) {
-//										item.CanShowInvisibleCube = false;
-//								}
-								foreach (Transform child in CurrentActiveCube.transform) {// CurrentMainCube.transform) {
-										gh.CubePositions.Remove (child.position);
-										GameObject.Destroy (child.gameObject);
-								}
-								GameObject.Destroy (currentCubeScript.gameObject);
-//								currentCubeScript.gameObject.SetActive (false);
-//								var rb = CurrentMainCube.GetComponent<Rigidbody> ();
-//								if (rb != null) {
-//										rb.isKinematic = false;
-//										rb.useGravity = true;
-//								}
-						}
-				}
+				Jump ();
 		}
 
 		void OnLand ()
@@ -73,6 +50,32 @@ public class Player : PlanetCitizen, IPause, IDestroyable// MonoBehaviour
 //				print ("Falling");
 		}
 
+		public void Jump ()
+		{
+		
+				//				return;
+				AudioSource.PlayClipAtPoint (jumpSound, transform.position);
+				//				Debug.Log (CurrentActiveCube);
+				if (CurrentActiveCube != null) {
+						//			CurrentMainCube.GetComponent<Cube> ().Detach ();
+						var currentCubeScript = CurrentActiveCube.GetComponent<Cube> ();// CurrentMainCube.GetComponent<Cube> ();
+						gh.CubePositions.Remove (currentCubeScript.transform.position);
+						if ((currentCubeScript as IDestroyable).IsDestroyable) {
+								foreach (Transform child in CurrentActiveCube.transform) {// CurrentMainCube.transform) {
+										gh.CubePositions.Remove (child.position);
+										GameObject.Destroy (child.gameObject);
+								}
+								GameObject.Destroy (currentCubeScript.gameObject);
+								//								currentCubeScript.gameObject.SetActive (false);
+								//								var rb = CurrentMainCube.GetComponent<Rigidbody> ();
+								//								if (rb != null) {
+								//										rb.isKinematic = false;
+								//										rb.useGravity = true;
+								//								}
+						}
+				}
+		}
+	
 		public void BuildCube ()
 		{
 //				Debug.Log ("CurrentInvisibleCube: " + CurrentInvisibleCube);
@@ -84,12 +87,56 @@ public class Player : PlanetCitizen, IPause, IDestroyable// MonoBehaviour
 						AudioSource.PlayClipAtPoint (buildCubeSound, transform.position);
 				}
 		}
+
+		public bool useTouchInput = false;
+
+		void OnBuildCube ()
+		{
+				BuildCube ();
+		}
 	
 		// Update is called once per frame
 		void Update ()
 		{
-				if (Input.GetKeyDown (KeyCode.E) && Helper.IsTimeUp (150f)) {
-						BuildCube ();
+				if (useTouchInput) {
+
+//						if (Input.touchCount == 0) {
+//								if (hasRegisteredBothFingers) {
+//										Jump ();
+//										hasRegisteredBothFingers = false;
+//								}
+//						} else if (Input.touchCount == 1 && Input.GetTouch (0).phase == TouchPhase.Moved) {
+//								// Touch and move finger to rotate around a planet
+//			
+//								RotatePlayer (Input.GetTouch (0).deltaPosition);
+//								//jumpPower = 0f;
+//						} else if (Input.touchCount == 2) {
+//								hasRegisteredBothFingers = true;
+//								gameObject.SendMessage ("OnJumpButtonIsDown", SendMessageOptions.DontRequireReceiver);
+//								// Charge jump power 
+//								// Make sure the player doesn't get too much jump power and only
+//								// can consume jump power while on a planet (not in "air").
+//								if (jumpPowerDirection && JumpPower <= ControllerInfo.MaxJumpPower && !isInAir && currentPlanet != null) {
+//										JumpPower += ControllerInfo.JumpPowerIncrement;
+//										gameObject.SendMessage ("OnJumpButtonPressed", SendMessageOptions.DontRequireReceiver);
+//								} else {
+//										jumpPowerDirection = false;
+//								}
+//								if (!jumpPowerDirection && JumpPower >= 0f && !isInAir && currentPlanet != null) {
+//										JumpPower -= ControllerInfo.JumpPowerIncrement;
+//										gameObject.SendMessage ("OnJumpButtonPressed", SendMessageOptions.DontRequireReceiver);
+//								} else {
+//										jumpPowerDirection = true;
+//								}
+//								if (isInAir && currentPlanet == null) {
+//										gameObject.SendMessage ("OnJumpButtonPressedWhileInAir", SendMessageOptions.DontRequireReceiver);
+//				
+//								}
+//						}
+				} else {
+						if (Input.GetKeyDown (KeyCode.E) && Helper.IsTimeUp (150f)) {
+								BuildCube ();
+						}
 				}
 
 //				Vector3 fwd = transform.TransformDirection (Vector3.forward);
