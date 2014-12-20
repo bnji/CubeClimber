@@ -28,6 +28,8 @@ public class Player : PlanetCitizen, IPause, IDestroyable// MonoBehaviour
 		void Start ()
 		{
 				gh = GameObject.FindObjectOfType<GameHandler> ();
+				characterController = GetComponent<CharacterController> ();
+				lineRenderer = GetComponentInChildren<LineRenderer> ();
 		}
 
 		GameHandler gh;
@@ -39,7 +41,7 @@ public class Player : PlanetCitizen, IPause, IDestroyable// MonoBehaviour
 
 		void OnLand ()
 		{
-				Debug.Log ("landed");
+//				Debug.Log ("landed");
 				if (landedSound != null) {
 						AudioSource.PlayClipAtPoint (landedSound, transform.position);
 				}
@@ -59,9 +61,11 @@ public class Player : PlanetCitizen, IPause, IDestroyable// MonoBehaviour
 				if (CurrentActiveCube != null) {
 						//			CurrentMainCube.GetComponent<Cube> ().Detach ();
 						var currentCubeScript = CurrentActiveCube.GetComponent<Cube> ();// CurrentMainCube.GetComponent<Cube> ();
+//						currentCubeScript.CubePositions.Remove (currentCubeScript.transform.position);
 						gh.CubePositions.Remove (currentCubeScript.transform.position);
 						if ((currentCubeScript as IDestroyable).IsDestroyable) {
 								foreach (Transform child in CurrentActiveCube.transform) {// CurrentMainCube.transform) {
+//										currentCubeScript.CubePositions.Remove (child.position);
 										gh.CubePositions.Remove (child.position);
 										GameObject.Destroy (child.gameObject);
 								}
@@ -83,12 +87,10 @@ public class Player : PlanetCitizen, IPause, IDestroyable// MonoBehaviour
 						return;
 
 				var currentInvisibleCubeScript = CurrentInvisibleCube.GetComponent<CubeInvisible> ();
-				if (currentInvisibleCubeScript.BuildCube (cubePrefab)) {
+				if (currentInvisibleCubeScript.BuildCube (this, cubePrefab)) {
 						AudioSource.PlayClipAtPoint (buildCubeSound, transform.position);
 				}
 		}
-
-		public bool useTouchInput = false;
 
 		void OnBuildCube ()
 		{
@@ -98,59 +100,65 @@ public class Player : PlanetCitizen, IPause, IDestroyable// MonoBehaviour
 		// Update is called once per frame
 		void Update ()
 		{
-				if (useTouchInput) {
-
-//						if (Input.touchCount == 0) {
-//								if (hasRegisteredBothFingers) {
-//										Jump ();
-//										hasRegisteredBothFingers = false;
-//								}
-//						} else if (Input.touchCount == 1 && Input.GetTouch (0).phase == TouchPhase.Moved) {
-//								// Touch and move finger to rotate around a planet
-//			
-//								RotatePlayer (Input.GetTouch (0).deltaPosition);
-//								//jumpPower = 0f;
-//						} else if (Input.touchCount == 2) {
-//								hasRegisteredBothFingers = true;
-//								gameObject.SendMessage ("OnJumpButtonIsDown", SendMessageOptions.DontRequireReceiver);
-//								// Charge jump power 
-//								// Make sure the player doesn't get too much jump power and only
-//								// can consume jump power while on a planet (not in "air").
-//								if (jumpPowerDirection && JumpPower <= ControllerInfo.MaxJumpPower && !isInAir && currentPlanet != null) {
-//										JumpPower += ControllerInfo.JumpPowerIncrement;
-//										gameObject.SendMessage ("OnJumpButtonPressed", SendMessageOptions.DontRequireReceiver);
-//								} else {
-//										jumpPowerDirection = false;
-//								}
-//								if (!jumpPowerDirection && JumpPower >= 0f && !isInAir && currentPlanet != null) {
-//										JumpPower -= ControllerInfo.JumpPowerIncrement;
-//										gameObject.SendMessage ("OnJumpButtonPressed", SendMessageOptions.DontRequireReceiver);
-//								} else {
-//										jumpPowerDirection = true;
-//								}
-//								if (isInAir && currentPlanet == null) {
-//										gameObject.SendMessage ("OnJumpButtonPressedWhileInAir", SendMessageOptions.DontRequireReceiver);
-//				
-//								}
-//						}
-				} else {
-						if (Input.GetKeyDown (KeyCode.E) && Helper.IsTimeUp (150f)) {
-								BuildCube ();
-						}
+				if (Input.GetKeyDown (KeyCode.E) && Helper.IsTimeUp (150f)) {
+						BuildCube ();
 				}
 
-//				Vector3 fwd = transform.TransformDirection (Vector3.forward);
-//				RaycastHit rayCastHit;
-//		
+				Vector3 fwd = transform.TransformDirection (Vector3.forward);
+				RaycastHit rayCastHit;
+		
 //				Ray ray = Camera.main.ViewportPointToRay (Input.mousePosition);
-//				if (Physics.Raycast (transform.position, fwd, out rayCastHit, 10000)) {
-//						Debug.DrawLine (ray.origin, rayCastHit.point);
-//						var cubeHit = rayCastHit.transform.GetComponent<Cube> ();
-//						if (cubeHit != null) {
-//								print (cubeHit.transform.name);
-//						}
-////						print (rayCastHit.transform.name);
-//				}
+				Ray ray = Camera.main.ScreenPointToRay (new Vector3 (Screen.width / 2, Screen.height / 2));
+				Physics.Raycast (ray, out rayCastHit, 100000);
+				//if (Physics.Raycast (transform.position, fwd, out rayCastHit, 10000)) {
+				if (Physics.Raycast (ray, out rayCastHit, 10000)) {
+						Debug.DrawLine (ray.origin, rayCastHit.point, Color.red);
+						var cubeHit = rayCastHit.collider.transform.GetComponent<Cube> ();
+//						Debug.Log (rayCastHit.distance);
+						if (cubeHit != null) {
+								if (cubeHit != lastCubeHit && lastCubeHit != null) {
+										lastCubeHit.ResetColor ();
+//										setLineRenderer (transform.position, transform.position);
+								}
+								lastCubeHit = cubeHit;
+								if (rayCastHit.distance >= 5.0f) {
+//										Debug.Log (rayCastHit.distance);
+										cubeHit.SetColor (Color.red);
+								} else {
+										lastCubeHit.ResetColor ();
+								}
+//								setLineRenderer (transform.position, rayCastHit.collider.transform.position);
+						} else {
+								if (lastCubeHit != null) {
+										lastCubeHit.ResetColor ();
+//										setLineRenderer (transform.position, transform.position);
+								}
+						}
+				}
+		}
+
+		private void setLineRenderer (Vector3 start, Vector3 end)
+		{
+				lineRenderer.SetPosition (0, start);
+				lineRenderer.SetPosition (1, end);
+		}
+
+		private LineRenderer lineRenderer;
+
+		private Cube lastCubeHit;
+
+		private CharacterController characterController;
+
+		public void SetGravity (float pickupValue)
+		{
+		}
+
+		void OnTriggerEnter (Collider collider)
+		{
+//				Debug.Log (collider.gameObject.name);
+				if (collider.gameObject.tag == "roof" && characterController.isGrounded) {
+						Debug.Log ("Player died");
+				}
 		}
 
 		public void ApplyDamage (float damage)

@@ -65,27 +65,34 @@ public class CubeInvisible : CubeBase
 				return canAdd;
 		}
 
-		public bool BuildCube (Object cubePrefab)
+		public bool BuildCube (Player player, Object cubePrefab)
 		{
 				if (CanAdd ()) {
-						var gh = GameObject.FindObjectOfType<GameHandler> ();
+//						var gh = GameObject.FindObjectOfType<GameHandler> ();
 
 						var go = (GameObject)Instantiate (cubePrefab, transform.position, transform.rotation);
 						var cube = go.GetComponent<Cube> ();
 						(cube as IDestroyable).IsDestroyable = true;
-						Debug.Log (renderer.material.color);
+//						Debug.Log (renderer.material.color);
 						cube.transform.renderer.material.color = gh.lastUsedColor;// renderer.material.color;
 						cube.transform.parent = transform;
 //						cube.SetSparkleState (false);
 						Destroy (cube.GetComponentInChildren<GravitationalField> ().gameObject);
-						Destroy (cube.sparkles.gameObject);
+						if (cube.sparkles != null) {
+								Destroy (cube.sparkles.gameObject);
+						}
 						foreach (var item in cube.GetComponentsInChildren<TriggerRotate>()) {
 								Destroy (item.gameObject);
 						}
+//			var currentCubeScript = player.CurrentActiveCube.GetComponent<Cube> ();
+//			currentCubeScript.AddCube(cube);
 						cube.transform.name = "Cube #" + gh.CubePositions.Count;
+//						cube.transform.name = "Cube #" + mainCubeScript.CubePositions.Count;
 						mainCubeScript.AddCube (cube);
+//						mainCubeScript.CubePositions.Add (cube.transform.position);
 						gh.CubePositions.Add (cube.transform.position);
 						Debug.Log ("Added cube " + cube.transform.name + ". Cube count: " + gh.CubePositions.Count);
+//						Debug.Log ("Added cube " + cube.transform.name + ". Cube count: " + mainCubeScript.CubePositions.Count);
 						return true;
 				}
 				return false;
@@ -109,11 +116,11 @@ public class CubeInvisible : CubeBase
 				canBuild = true;
 				if (collider.transform.tag == "Player") {
 			
-						var springJoint = transform.GetComponentInChildren<SpringJoint> ();
-//						Debug.Log (springJoint);
-						if (springJoint != null) {
-								springJoint.connectedBody = collider.rigidbody;
-						}
+//						var springJoint = transform.GetComponentInChildren<SpringJoint> ();
+////						Debug.Log (springJoint);
+//						if (springJoint != null) {
+//								springJoint.connectedBody = collider.rigidbody;
+//						}
 				}
 //				Debug.Log (this.name);
 		}

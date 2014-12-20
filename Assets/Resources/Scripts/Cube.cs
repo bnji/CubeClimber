@@ -20,15 +20,30 @@ public class Cube : CubeBase, IDestroyable
 		public Transform CubeW;
 		public Transform CubeNW;
 
-//		public bool CanWalkOnInvisibleCubes { get; set; }
+		public bool CanWalkOnInvisibleCubes { get; set; }
 		public CubeInvisible LastInvisibleCube { get; set; }
 		public CubeInvisible CurrentInvisibleCube { get; set; }
 		public Transform sparkles;
 
+		public List<Vector3> CubePositions;
 
 		public void SetSparkleState (bool enabled)
 		{
 				sparkles.gameObject.SetActive (enabled);
+		}
+
+		private Color _startColor;
+
+		public void SetColor (Color color)
+		{
+				//				renderer.material.shader = Shader.Find ("Specular");
+				renderer.material.SetColor ("_Color", color);
+		}
+
+		public void ResetColor ()
+		{
+				//				renderer.material.shader = Shader.Find ("Specular");
+				renderer.material.SetColor ("_Color", _startColor);
 		}
 
 //		public void SetVisible (bool visible)
@@ -89,7 +104,7 @@ public class Cube : CubeBase, IDestroyable
 
 		void Start ()
 		{
-
+				_startColor = renderer.material.GetColor ("_Color");
 		}
 
 		// Update is called once per frame
@@ -113,7 +128,7 @@ public class Cube : CubeBase, IDestroyable
 		public Cube ()
 		{
 				cubes = new List<Cube> ();
-//				CanWalkOnInvisibleCubes = false;
+				CanWalkOnInvisibleCubes = false;
 		}
 
 }

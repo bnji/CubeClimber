@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 public class GameHandler : MonoBehaviour
 {
-	
+		public bool canBuildCubeOnStay = false;
 		public bool useGlobalGravity = false;
 		public List<Vector3> CubePositions;
 
@@ -19,6 +19,7 @@ public class GameHandler : MonoBehaviour
 					new Vector3 (26f, 0f, 225f),
 					new Vector3 (255f, 219f, 0f)
 				});
+				CubePositions = new List<Vector3> ();
 		}
 	
 		// Update is called once per frame

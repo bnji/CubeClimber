@@ -10,6 +10,9 @@ public class CubeTrigger : MonoBehaviour
 
 		private float timeSpentOnCube;
 		private float lastTimeEntered;
+		private GameHandler gh;
+		private CubeInvisible invisibleCubeScript;
+		private Player player;
 
 		public bool CanShowInvisibleCube {
 				get;
@@ -19,6 +22,7 @@ public class CubeTrigger : MonoBehaviour
 		// Use this for initialization
 		void Start ()
 		{
+				gh = FindObjectOfType<GameHandler> ();
 				CanShowInvisibleCube = true;
 				lastTimeEntered = Time.time;
 		}
@@ -32,27 +36,28 @@ public class CubeTrigger : MonoBehaviour
 	
 		void OnTriggerStay (Collider collider)
 		{
+				if (gh.canBuildCubeOnStay) {
 //								if (Helper.IsTimeUp (PlayerPrefs.GetFloat ("BuildCubeAutoInterval")) && canBuild) {
-				if (Helper.IsTimeUp (25f) && canBuild) {
-						var player = GameObject.FindObjectOfType<Player> ();
-						if (player != null && canBuild) {
-								player.BuildCube ();
-								canBuild = false;
+						if (Helper.IsTimeUp (25f) && canBuild) {
+								var player = GameObject.FindObjectOfType<Player> ();
+								if (player != null && canBuild) {
+										player.BuildCube ();
+										canBuild = false;
+								}
 						}
 				}
+				var mainCubeScript = mainCube.GetComponent<Cube> ();
+				if (mainCubeScript != null) {
+						mainCubeScript.CanWalkOnInvisibleCubes = true;
+				}
 		}
-	
-		CubeInvisible invisibleCubeScript;
 	
 		void OnTriggerEnter (Collider collider)
 		{
 				if (!CanShowInvisibleCube)
 						return;
 
-
-				
-
-				var player = collider.GetComponent<Player> ();
+				player = collider.GetComponent<Player> ();
 				var mainCubeScript = mainCube.GetComponent<Cube> ();
 //				Debug.Log (mainCubeScript.transform.name);
 				invisibleCubeScript = invisibleCube.GetComponent<CubeInvisible> ();
@@ -64,20 +69,24 @@ public class CubeTrigger : MonoBehaviour
 						player.CurrentInvisibleCube = invisibleCube;
 
 						var diffY = collider.transform.position.y - transform.position.y;
-						Debug.Log (diffY);
-						if (collider.transform.position.y < transform.position.y) {
-//								mainCubeScript.CanWalkOnInvisibleCubes = false;
-								invisibleCubeScript.SetBoxTriggerState (true);
-								Debug.Log ("ok");
-								return;
-						} else {
+//						Debug.Log (diffY);
+						if (diffY > 0) {
 								invisibleCubeScript.SetBoxTriggerState (false);
+								invisibleCubeScript.SetVisible (true);
+//								return;
+						} else {
+								invisibleCubeScript.SetBoxTriggerState (true);
+								invisibleCubeScript.SetVisible (false);
 						}
+
+//						invisibleCubeScript.SetBoxTriggerState (false);
+
+
 				}
 
 				// If player can walk on invisible cubes (has landed (stayed) on the main cube)
 				// then set last and current invisible cube
-				if (mainCubeScript != null) {// && mainCubeScript.CanWalkOnInvisibleCubes) {
+				if (mainCubeScript != null && mainCubeScript.CanWalkOnInvisibleCubes) {
 						// If player has never touched any invisible cubes, then set both to current invisible cube
 						if (mainCubeScript.LastInvisibleCube == null && mainCubeScript.CurrentInvisibleCube == null) {
 								mainCubeScript.LastInvisibleCube = invisibleCubeScript;
@@ -101,6 +110,7 @@ public class CubeTrigger : MonoBehaviour
 								bool hasCubeAtGivePosition = false;
 								var gh = GameObject.FindObjectOfType<GameHandler> ();
 								foreach (var item in gh.CubePositions) {
+//								foreach (var item in mainCubeScript.CubePositions) {
 										if (item.Equals (invisibleCube.position)) {
 												hasCubeAtGivePosition = true;
 												Debug.Log ("there's already a cube here");
@@ -139,5 +149,9 @@ public class CubeTrigger : MonoBehaviour
 //				}
 				invisibleCubeScript.SetVisible (false);
 				canBuild = false;
+		
+				if (player != null) {
+						player.CurrentActiveCube = null;
+				}
 		}
 }
