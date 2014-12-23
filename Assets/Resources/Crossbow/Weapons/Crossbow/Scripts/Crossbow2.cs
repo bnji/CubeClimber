@@ -23,13 +23,24 @@ public class Crossbow2 : MonoBehaviour, IWeapon, ICarriable
 	
 		private Rigidbody WeaponHolderBody { get; set; }
 		private CharacterController CharController { get; set; }
-		private FPSWalkerEnhanced FpsWalker {
-				get { return fpsWalker; }
-				set {
-						fpsWalker = value;
-						useFpsWalker = fpsWalker.enabled;
-				}
-		}
+        //private FPSWalkerEnhanced FpsWalker
+        //{
+        //    get { return fpsWalker; }
+        //    set
+        //    {
+        //        fpsWalker = value;
+        //        useFpsWalker = fpsWalker.enabled;
+        //    }
+        //}
+        private FPSControllerNew FpsWalker
+        {
+            get { return fpsWalker; }
+            set
+            {
+                fpsWalker = value;
+                useFpsWalker = fpsWalker.enabled;
+            }
+        }
 		private FPSInputController FpsInput { get; set; }
 		private MouseLook PlayerMouseLook { get; set; }
 		private Camera MainCamera { get; set; }
@@ -38,8 +49,8 @@ public class Crossbow2 : MonoBehaviour, IWeapon, ICarriable
 		private Vector3 airVelocityAfterRelease;
 		private Vector3 airVelocityBeforeRelease;	
 		private Quaternion rotationBeforeRopeSwing;
-		private float heightBeforeRopeSwing;	
-		private FPSWalkerEnhanced fpsWalker = null;
+		private float heightBeforeRopeSwing;
+        private FPSControllerNew fpsWalker = null; //private FPSWalkerEnhanced fpsWalker = null;
 		private Arrow arrow;
 		private Joint joint = null;
 		private bool isGrounded = true;
@@ -76,7 +87,9 @@ public class Crossbow2 : MonoBehaviour, IWeapon, ICarriable
 				Player = player;
 				WeaponHolderBody = player.GetComponentInChildren<Rigidbody> ();
 				CharController = player.GetComponent<CharacterController> ();
-				FpsWalker = player.GetComponent<FPSWalkerEnhanced> ();
+                //FpsWalker = player.GetComponent<FPSWalkerEnhanced> ();
+                FpsWalker = player.GetComponent<FPSControllerNew> ();
+                
 				FpsInput = player.GetComponent<FPSInputController> ();
 				PlayerMouseLook = player.GetComponent<MouseLook> ();
 				MainCamera = player.GetComponentInChildren<Camera> ();
@@ -196,16 +209,17 @@ public class Crossbow2 : MonoBehaviour, IWeapon, ICarriable
 								MainCamera.GetComponent<MouseLook> ().axes = MouseLook.RotationAxes.MouseY;
 								Player.transform.rotation = rotationBeforeRopeSwing;
 								MainCamera.transform.rotation = rotationBeforeRopeSwing;
-				
-								if (useFpsWalker) {
-										fpsWalker.enabled = true;
-										fpsWalker.myTransform = Player.transform;
-										//fpsWalker.myTransform.position = newPos;
-								} else {
-										CharController.enabled = true;
-										//characterController.transform = Owner.transform;
-										//characterController.transform.position = newPos;
-								}
+
+                                CharController.enabled = true;
+                                //if (useFpsWalker) {
+                                //        fpsWalker.enabled = true;
+                                //        fpsWalker.myTransform = Player.transform;
+                                //        //fpsWalker.myTransform.position = newPos;
+                                //} else {
+                                //        CharController.enabled = true;
+                                //        //characterController.transform = Owner.transform;
+                                //        //characterController.transform.position = newPos;
+                                //}
 								//Player.GetComponentInChildren<MeshRenderer>().enabled = true;
 								Player.position = WeaponHolderBody.position + new Vector3 (0f, Player.transform.localScale.y * 2f, 0f); // Set player to be at this new position
 								//PlayerMouseLook.transform.rotation = WeaponHolderBody.transform.rotation;
@@ -268,7 +282,9 @@ public class Crossbow2 : MonoBehaviour, IWeapon, ICarriable
 						return;
 				//if(!canUseRope) return;
 		
-				if (fpsWalker.grounded || CharController.isGrounded) {
+                //if (fpsWalker.grounded || CharController.isGrounded) {
+                if (CharController.isGrounded)
+                {
 						rotationBeforeRopeSwing = Player.transform.rotation;
 						heightBeforeRopeSwing = Player.transform.position.y;
 						//canUseRope = true;

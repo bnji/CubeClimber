@@ -6,14 +6,14 @@ public class Teleporter : MonoBehaviour
 		public Transform roof;
 		public float roofSpeed = 0.25f;
 		public float scaleMult = 2f;
-		Vector3 originalScale;
+        //Vector3 originalScale;
 		bool isPlayerInside = false;
 		Player player;
 
 		// Use this for initialization
 		void Start ()
 		{
-				originalScale = transform.localScale;
+                //originalScale = transform.localScale;
 		}
 
 	
@@ -36,15 +36,15 @@ public class Teleporter : MonoBehaviour
 				player = collider.gameObject.GetComponent<Player> ();
 				if (player != null) {
 						isPlayerInside = true;
-						var newY = originalScale.y * scaleMult;
-						transform.localScale = new Vector3 (originalScale.x * scaleMult, originalScale.y * scaleMult, originalScale.z * scaleMult);
-						transform.position = new Vector3 (transform.position.x, transform.position.y + (newY / originalScale.y) + 1f, transform.position.z);
+                        //var newY = originalScale.y * scaleMult;
+                        //transform.localScale = new Vector3 (originalScale.x * scaleMult, originalScale.y * scaleMult, originalScale.z * scaleMult);
+                        //transform.position = new Vector3 (transform.position.x, transform.position.y + (newY / originalScale.y) + 1f, transform.position.z);
 				}
 		}
 	
 		void OnTriggerExit (Collider collider)
 		{
 				isPlayerInside = false;
-				transform.localScale = new Vector3 (originalScale.x, originalScale.y, originalScale.z);
+                //transform.localScale = new Vector3 (originalScale.x, originalScale.y, originalScale.z);
 		}
 }

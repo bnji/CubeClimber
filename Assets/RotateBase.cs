@@ -7,7 +7,9 @@ public class RotateBase : MonoBehaviour
 		private Vector3 rotateAroundAxis;
 		private RotateAxis rotateAxis;
 		private float rotateToDegrees;
+        private bool isInitialRotation = false;
 		private bool canRotate;
+        private float rotateFromDegrees;
 	
 		void Start ()
 		{
@@ -32,12 +34,30 @@ public class RotateBase : MonoBehaviour
 								angleRotated = transform.rotation.eulerAngles.z;
 								break;
 						}
-						if (angleRotated < rotateToDegrees) {
-								transform.RotateAround (transform.position, rotateAroundAxis, angle);
-						} else {
-								canRotate = false;
-								Physics.gravity = new Vector3 (0f, -9.82f, 0f);
-						}
+                        var angle2 = (angleRotated - rotateFromDegrees) / rotateToDegrees;
+                        Debug.Log(angle2);
+                        if (isInitialRotation)
+                        {
+                            transform.RotateAround(transform.position, rotateAroundAxis, angle);
+                        }
+
+                        if (angle2 == 0 || angle2 == 1)
+                        {
+                            canRotate = false;
+                            Physics.gravity = new Vector3(0f, -9.82f, 0f);
+                            isInitialRotation = false;
+                        }
+                        else
+                        {
+                            transform.RotateAround(transform.position, rotateAroundAxis, angle);
+                        }
+                        //Debug.Log(angleRotated + " / " + (rotateFromDegrees + rotateToDegrees) % 360);
+                        //if (angleRotated < (rotateFromDegrees + rotateToDegrees) % 360) {
+                        //        transform.RotateAround (transform.position, rotateAroundAxis, angle);
+                        //} else {
+                        //        canRotate = false;
+                        //        Physics.gravity = new Vector3 (0f, -9.82f, 0f);
+                        //}
 				}
 		}
 
@@ -45,13 +65,16 @@ public class RotateBase : MonoBehaviour
 		{
 				if (!canRotate) {
 						switch (axis) {
-						case RotateAxis.X: 
+                            case RotateAxis.X:
+                                rotateFromDegrees = transform.localRotation.eulerAngles.x;
 								rotateAroundAxis = new Vector3 (1f, 0f, 0f);
 								break;
-						case RotateAxis.Y: 
+                            case RotateAxis.Y:
+                                rotateFromDegrees = transform.localRotation.eulerAngles.y;
 								rotateAroundAxis = new Vector3 (0f, 1f, 0f);
 								break;
-						case RotateAxis.Z: 
+                            case RotateAxis.Z:
+                                rotateFromDegrees = transform.localRotation.eulerAngles.z;
 								rotateAroundAxis = new Vector3 (0f, 0f, 1f);
 								break;
 						}
@@ -60,7 +83,9 @@ public class RotateBase : MonoBehaviour
 						rotateToDegrees += degrees;
 						canRotate = true;
 						Physics.gravity = new Vector3 (0f, 0f, 0f);
+                        isInitialRotation = true;
 				}
+                Debug.Log("rotateFromDegrees: " + rotateFromDegrees);
 		}
 }
 
