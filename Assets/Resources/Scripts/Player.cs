@@ -12,6 +12,7 @@ public class Player : PlanetCitizen, IPause, IDestroyable// MonoBehaviour
 		public AudioClip jumpSound;
 		public AudioClip landedSound;
 		public AudioClip buildCubeSound;
+		public AudioClip autoBuildToggleSound;
 	
 	#region IDestroyable implementation
 	
@@ -47,6 +48,22 @@ public class Player : PlanetCitizen, IPause, IDestroyable// MonoBehaviour
 				}
 		}
 
+		void ToggleAutoBuild (Transform t)
+		{
+				gh.canBuildCubeOnStay = true ^ gh.canBuildCubeOnStay;
+		
+				//								Debug.Log (GameObject.FindObjectOfType<GameHandler> ().canBuildCubeOnStay);
+//		GameObject.FindObjectOfType<GameHandler> ().canBuildCubeOnStay = true ^ GameObject.FindObjectOfType<GameHandler> ().canBuildCubeOnStay;
+				AudioSource.PlayClipAtPoint (autoBuildToggleSound, transform.position);
+				t.GetComponent<ToggleAutoBuild> ().Toggle ();
+		}
+
+		void TogglePause (Transform t)
+		{
+				Debug.Log ("Pause");
+				t.GetComponent<ToggleAutoBuild> ().Toggle ();
+		}
+	
 		void OnFall ()
 		{
 //				print ("Falling");

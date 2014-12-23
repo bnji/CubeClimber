@@ -16,7 +16,7 @@ using System.Collections;
 [RequireComponent(typeof(CharacterController))]
 public class TouchControllerNew : MonoBehaviour
 {
-
+		public bool isDebugMode = false;
 		// This script must be attached to a GameObject that has a CharacterController
 		public JoystickNew moveTouchPad;
 		public JoystickNew touchPad;						// If unassigned, tilt is used
@@ -81,6 +81,10 @@ public class TouchControllerNew : MonoBehaviour
 				if (spawn) {
 						thisTransform.position = spawn.transform.position;
 				}
+
+				debugText.gameObject.SetActive (isDebugMode);
+				debugText2.gameObject.SetActive (isDebugMode);
+				//				debugText = GameObject.FindObjectOfType<DebugText> ();
 		}
 
 		void RotatePlayer (Vector3 camRotation)
@@ -122,87 +126,179 @@ public class TouchControllerNew : MonoBehaviour
 						cameraPivot.Rotate (-camRotation.y, 0, 0);
 				}
 		}
+
+		public DebugText debugText;
+		public DebugText debugText2;
+		int fingerId;
 	
-		bool jump = false;
+		TouchInfo touchMove = null;
+		TouchInfo touchRotate = null;
+
+		bool isTouchInitialTouchLeftSide = false;
+		bool isTouchInitialTouchRightSide = false;
 	
 		// Update is called once per frame
-		void Update ()
+		void FixedUpdate ()
 		{
 		
 				var movement = Vector3.zero;
-		
+
+				if (touchPad.Touches.Count == 0) {
+						touchMove = null;
+						touchRotate = null;
+				}
 		
 				foreach (var touchInfo in touchPad.Touches) {
-						var val = touchInfo.Value;
-			
-						if (val.Touch.fingerId == 0 && val.IsOnLeftSide) {
-								Debug.Log ("Left finger on left side");
+
+						var touch = touchInfo.Value;
+
+						fingerId = touch.Touch.fingerId;
+						
+//						if (touch.Touch.phase == TouchPhase.Began) {
+//								debugText.SetText ("" + fingerId + ", left?: " + touch.IsOnLeftSide);
+//						}
+
+//						if (touch.Touch.position.x > Screen.width - 200 && touch.Touch.position.y > Screen.height - 200) {
+//								debugText.SetText ("OK");
+//						}
+//						debugText.SetText (touch.Touch.position.x + "/" + Screen.width);
+
+						if (fingerId == 0) {
+
+								// if finger initially is touched on left side then set it to be touch move
+								// if finger initially is touched on right side then set it to be touch rotate
+								// on touch end set touch move and touchrotate to null
+								isTouchInitialTouchLeftSide = touch.Touch.phase == TouchPhase.Began && touch.IsOnLeftSide;
+								isTouchInitialTouchRightSide = touch.Touch.phase == TouchPhase.Began && !touch.IsOnLeftSide;
 				
-								movement = thisTransform.TransformDirection (new Vector3 (val.Position.x, 0, val.Position.y));
-								// We only want horizontal movement
-								movement.y = 0;
-								movement.Normalize ();
-								movement = ApplyMovement (movement, val.Position);
-//								// Check for jump
-//								if (character.isGrounded) {		
+								if (isTouchInitialTouchLeftSide) {
+										touchMove = touch;
+										//move
+								}
+								if (isTouchInitialTouchRightSide) {
+										touchRotate = touch;
+								}
+
+								if (touch.Touch.phase == TouchPhase.Ended) {
+										touchMove = null;
+										touchRotate = null;
+								}
+						}
+						if (fingerId == 1) {
+								touchRotate = touch;
+						}
+			
+//						if (touch.Touch.fingerId == 0 && touch.IsOnLeftSide) {
+//								Debug.Log ("Left finger on left side");
+//				
+//								if (touch.Touch.phase != TouchPhase.Began) {
+//										movement = thisTransform.TransformDirection (new Vector3 (touch.Position.x, 0, touch.Position.y));
 //					
-//										var jump = false;
-//					
-//										//						if (!moveTouchPad.IsFingerDown ()) {
-//										//								canJump = true;
-//										//						}
-//					
-//										if (jump) {
+//										// We only want horizontal movement
+//										movement.y = 0;
+//										movement.Normalize ();
+//										movement = ApplyMovement (movement, touch.Position);
+//								}
+//								if (touch.Touch.tapCount == 2) {
+//										if (Helper.IsTimeUp (150f))
+//												Build ();
+//										Debug.Log ("Double Tap on with left finger on left side");
+//								}
+//						} else if (touch.Touch.fingerId == 0 && !touch.IsOnLeftSide) {
+//								Debug.Log ("Left finger on right side. Touch phase: " + touch.Touch.phase);
+//								if (touch.Touch.phase == TouchPhase.Moved) {
+//										RotatePlayer (touch.Position);
+//								}
+//								if (touch.Touch.tapCount == 2) {
+////										if (Helper.IsTimeUp (250f))
+//										if (canJump && character.isGrounded) {
 //												// Apply the current movement to launch velocity		
 //												velocity = character.velocity;
 //												velocity.y = jumpSpeed;
-//						
+//												Jump ();
+//												canJump = false;
+//												lastTime = Time.time;
 //										}
-//								} else {			
-//										// Apply gravity to our velocity to diminish it over time
-//										velocity.y += Physics.gravity.y * Time.deltaTime;
-//					
-//										// Adjust additional movement while in-air
-//										movement.x *= inAirMultiplier;
-//										movement.z *= inAirMultiplier;
+//										Debug.Log ("Double Tap on with left finger on right side");
 //								}
-				
-								if (val.Touch.tapCount == 2) {
-										if (Helper.IsTimeUp (150f))
-												Build ();
-										Debug.Log ("Double Tap on with left finger on left side");
-								}
-						} else if (val.Touch.fingerId == 0 && !val.IsOnLeftSide) {
-								Debug.Log ("Left finger on right side");
-								RotatePlayer (val.Position);
-								if (val.Touch.tapCount == 2) {
-//										if (Helper.IsTimeUp (250f))
-										if (canJump && character.isGrounded) {
-												// Apply the current movement to launch velocity		
-												velocity = character.velocity;
-												velocity.y = jumpSpeed;
-												Jump ();
-												canJump = false;
-												lastTime = Time.time;
-										}
-										Debug.Log ("Double Tap on with left finger on right side");
-								}
-						}
-						if (val.Touch.fingerId == 1 && val.IsOnLeftSide) {
-								Debug.Log ("Right finger on left side");
-								if (val.Touch.tapCount == 2) {
-										Debug.Log ("Double Tap on with right finger on left side");
-								}
-						} else if (val.Touch.fingerId == 1 && !val.IsOnLeftSide) {
-								Debug.Log ("Right finger on right side");
-								RotatePlayer (val.Position);
-								if (val.Touch.tapCount == 2) {
-										Jump ();
-										Debug.Log ("Double Tap on with right finger on right side");
-								}
-						}
+//						}
+//						if (touch.Touch.fingerId == 1 && touch.IsOnLeftSide) {
+//								Debug.Log ("Right finger on left side");
+//								if (touch.Touch.tapCount == 2) {
+//										Debug.Log ("Double Tap on with right finger on left side");
+//								}
+//						} else if (touch.Touch.fingerId == 1 && !touch.IsOnLeftSide) {
+//								if (touch.Touch.phase == TouchPhase.Moved) {
+//										Debug.Log ("Right finger on right side");
+//										RotatePlayer (touch.Position);
+//								}
+//								if (touch.Touch.tapCount == 2) {
+//										Jump ();
+//										Debug.Log ("Double Tap on with right finger on right side");
+//								}
+//						}
 				}
 
+				if (touchRotate != null) {
+						if (touchRotate.Touch.phase == TouchPhase.Moved) {
+								RotatePlayer (touchRotate.Position);
+						}
+//						Debug.Log ("" + (touchRotate.Touch.position.x > Screen.width - 200));
+						
+//						Debug.Log (item1Distance + " - " + touchRotate.Touch.position.x + "/" + Screen.width * item1.position.x);
+						if (touchRotate.Touch.phase == TouchPhase.Began && IsItemHit (touchRotate, item1)) {// touchRotate.Touch.position.x > Screen.width - 64 && touchRotate.Touch.position.y > Screen.height - 64) {
+								gameObject.SendMessage ("ToggleAutoBuild", item1, SendMessageOptions.DontRequireReceiver);
+						}
+						if (touchRotate.Touch.phase == TouchPhase.Began && IsItemHit (touchRotate, item2)) {
+								gameObject.SendMessage ("TogglePause", item2, SendMessageOptions.DontRequireReceiver);
+						}
+						if (touchRotate.Touch.tapCount == 2) {
+								//										if (Helper.IsTimeUp (250f))
+								if (canJump && character.isGrounded) {
+										// Apply the current movement to launch velocity		
+										velocity = character.velocity;
+										velocity.y = jumpSpeed;
+										Jump ();
+										canJump = false;
+										lastTime = Time.time;
+								}
+								Debug.Log ("Double Tap on with left finger on right side");
+						}
+						if (isDebugMode) {
+								debugText2.SetText ("rotate: pos: " + touchRotate.Touch.position + ", fid: " + touchRotate.Touch.fingerId + ", left?: " + touchRotate.IsOnLeftSide);
+						}
+				} else {
+						if (isDebugMode) {
+								debugText2.SetText ("");
+						}
+				}
+		
+				if (touchMove != null) {
+						if (touchMove.Touch.phase != TouchPhase.Began) {
+								movement = thisTransform.TransformDirection (new Vector3 (touchMove.Position.x, 0, touchMove.Position.y));
+				
+								// We only want horizontal movement
+								movement.y = 0;
+								movement.Normalize ();
+								movement = ApplyMovement (movement, touchMove.Position);
+						}
+						if (touchMove.Touch.tapCount == 2) {
+								if (Helper.IsTimeUp (150f))
+										Build ();
+								Debug.Log ("Double Tap on with left finger on left side");
+						}
+			
+						if (isDebugMode) {
+								debugText.SetText ("move: pos: " + touchMove.Touch.position + ", fid: " + touchMove.Touch.fingerId + ", left?: " + touchMove.IsOnLeftSide);
+						}
+				} else {
+			
+						if (isDebugMode) {
+								debugText.SetText ("");
+						}
+				}
+		
+		
 				if (!character.isGrounded) {
 						// Apply gravity to our velocity to diminish it over time
 						velocity.y += Physics.gravity.y * Time.deltaTime;
@@ -230,6 +326,16 @@ public class TouchControllerNew : MonoBehaviour
 						canJump = true;
 				}
 		}
+
+		bool IsItemHit (TouchInfo touchInfo, Transform item, float tolerance = 48f)
+		{
+				var dist = Vector2.Distance (touchInfo.Touch.position, new Vector2 (Screen.width * item.position.x, Screen.height * item.position.y));
+				Debug.Log ("dist: " + dist + ", item: " + item.name);
+				return dist < tolerance;
+		}
+
+		public Transform item1;
+		public Transform item2;
 
 		private float lastTime;
 	

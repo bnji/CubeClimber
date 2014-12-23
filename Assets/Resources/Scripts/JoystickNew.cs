@@ -91,7 +91,7 @@ public class JoystickNew : MonoBehaviour
 						item.Value.Position = Vector2.Lerp (position, Vector2.zero, 0.1f);
 				}
 //				position = Vector2.Lerp (position, Vector2.zero, 0.1f);
-				Debug.Log ("reset joystick");
+//				Debug.Log ("reset joystick");
 				fingerDownPos = Vector2.zero;
 		}
 	
@@ -154,6 +154,7 @@ public class JoystickNew : MonoBehaviour
 										});
 								} else {
 
+										Touches [fingerId].Touch = touch;
 										Touches [fingerId].Position = GetTouchPosAdjusted (touch);
 										Touches [fingerId].IsOnLeftSide = IsLeftSide (touchPos);
 								}

@@ -86,7 +86,7 @@ public class CubeTrigger : MonoBehaviour
 
 				// If player can walk on invisible cubes (has landed (stayed) on the main cube)
 				// then set last and current invisible cube
-				if (mainCubeScript != null && mainCubeScript.CanWalkOnInvisibleCubes) {
+				if (mainCubeScript != null) {// && mainCubeScript.CanWalkOnInvisibleCubes) {
 						// If player has never touched any invisible cubes, then set both to current invisible cube
 						if (mainCubeScript.LastInvisibleCube == null && mainCubeScript.CurrentInvisibleCube == null) {
 								mainCubeScript.LastInvisibleCube = invisibleCubeScript;
