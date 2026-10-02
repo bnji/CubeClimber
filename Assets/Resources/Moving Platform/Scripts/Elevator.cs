@@ -54,7 +54,7 @@ public class Elevator : MonoBehaviour
 				//if(posY > max) posY = max - 0.1f;
 				lastTime = Time.time;
 		
-				audio.clip = audioMoving;
+				GetComponent<AudioSource>().clip = audioMoving;
 				IsMoving = false;
 		}
 	
@@ -62,12 +62,12 @@ public class Elevator : MonoBehaviour
 		void Update ()
 		{
 				if (IsMoving && IsActive) {
-						if (!audio.isPlaying) {
-								audio.Play ();
+						if (!GetComponent<AudioSource>().isPlaying) {
+								GetComponent<AudioSource>().Play ();
 						}
 				} else {
-						if (audio.isPlaying)
-								audio.Stop ();
+						if (GetComponent<AudioSource>().isPlaying)
+								GetComponent<AudioSource>().Stop ();
 				}
 		}
 	
@@ -161,8 +161,8 @@ public class Elevator : MonoBehaviour
 		void ChangeDirection ()
 		{
 				IsMoving = false;
-				if (audio.isPlaying)
-						audio.Stop ();
+				if (GetComponent<AudioSource>().isPlaying)
+						GetComponent<AudioSource>().Stop ();
 				if (waitTimeEndStation > 0) {
 						lastTime = Time.time;
 						isActive = false;

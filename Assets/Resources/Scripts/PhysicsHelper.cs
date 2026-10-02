@@ -17,15 +17,15 @@ public class PhysicsHelper
 
 		public static Vector3 CalculateGravity (AstronomicalObject A, AstronomicalObject B)
 		{
-				return CalculateGravity (A.rigidbody, B.rigidbody);
+				return CalculateGravity (A.GetComponent<Rigidbody>(), B.GetComponent<Rigidbody>());
 		}
 
 		public static Vector3 ApplyGravity (AstronomicalObject A, AstronomicalObject B)
 		{
 				var force = CalculateGravity (A, B);
 				if (force.magnitude > Vector3.zero.magnitude) {
-						A.rigidbody.AddForce (force);
-						B.rigidbody.AddForce (-force);
+						A.GetComponent<Rigidbody>().AddForce (force);
+						B.GetComponent<Rigidbody>().AddForce (-force);
 				}
 				return force;
 		}

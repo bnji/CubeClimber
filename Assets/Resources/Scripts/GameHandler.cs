@@ -11,7 +11,7 @@ public class GameHandler : MonoBehaviour
 		// Use this for initialization
 		void Start ()
 		{
-				Screen.showCursor = false;
+				Cursor.visible = false;
 				PlayerPrefs.SetFloat ("BuildCubeAutoInterval", 2500f);
 				_colors = new List<Vector3> (new Vector3[4] {
 					new Vector3 (255f, 0f, 58f),

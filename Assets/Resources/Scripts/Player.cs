@@ -242,7 +242,7 @@ public class Player : PlanetCitizen, IPause, IDestroyable// MonoBehaviour
 		{
 				if (_controllerActionType == ControllerActionType.MOVE) {
 						float dir = Input.GetAxis ("Vertical");
-						rigidbody.AddForce (transform.up * dir * 0.1f * Time.deltaTime);
+						GetComponent<Rigidbody>().AddForce (transform.up * dir * 0.1f * Time.deltaTime);
 			
 //						if (dir > 0f) {
 //								GetComponent<Jetpack> ().Activate (JetpackDirection.BOTTOM);
@@ -262,7 +262,7 @@ public class Player : PlanetCitizen, IPause, IDestroyable// MonoBehaviour
 				case ControllerActionType.MOVE:
 						{
 								float dir = Input.GetAxis ("Horizontal");
-								rigidbody.AddForce (transform.right * dir * 0.1f * Time.deltaTime);
+								GetComponent<Rigidbody>().AddForce (transform.right * dir * 0.1f * Time.deltaTime);
 //								if (dir > 0f) {
 //										GetComponent<Jetpack> ().Activate (JetpackDirection.LEFT);
 //								} else {
@@ -275,8 +275,8 @@ public class Player : PlanetCitizen, IPause, IDestroyable// MonoBehaviour
 
 		void OnTurning (Vector3 force)
 		{
-				if (rigidbody.velocity.sqrMagnitude < maxTurnForceMagnitude) {
-						rigidbody.AddForce (force, controller.forceMode);
+				if (GetComponent<Rigidbody>().velocity.sqrMagnitude < maxTurnForceMagnitude) {
+						GetComponent<Rigidbody>().AddForce (force, controller.forceMode);
 				}
 		}
 	

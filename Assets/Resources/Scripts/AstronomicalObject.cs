@@ -34,12 +34,12 @@ public abstract class AstronomicalObject : MonoBehaviour, IPause
 
 		public void ResetMass ()
 		{
-				rigidbody.mass = initialMass;
+				GetComponent<Rigidbody>().mass = initialMass;
 		}
 
 		public void IncrementMass (float amount)
 		{
-				rigidbody.mass += amount;
+				GetComponent<Rigidbody>().mass += amount;
 		}
 	
 		void Awake ()
@@ -49,7 +49,7 @@ public abstract class AstronomicalObject : MonoBehaviour, IPause
 		// Use this for initialization
 		void Start ()
 		{
-				initialMass = rigidbody.mass;
+				initialMass = GetComponent<Rigidbody>().mass;
 				rotDir = movementDirection == PlanetMovementDirection.COUNTER_CLOCKWISE ? 1 : -1;
 				lifeStarted = Time.time;
 		}

@@ -82,7 +82,7 @@ public class PlayerExtScr : MonoBehaviour
 				if (target != null) {
 						print (target.name);
 						//print ("nearestObj: " + target.name);
-						target.renderer.material.color = new Color (1f, 0f, 0f, 1f);
+						target.GetComponent<Renderer>().material.color = new Color (1f, 0f, 0f, 1f);
 				}
 				if (fpsWalker.FellDown) {
 						if (!isPlayerDead) {

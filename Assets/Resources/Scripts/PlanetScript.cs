@@ -38,7 +38,7 @@ public class PlanetScript : AstronomicalObject, IDestroyable
 						PhysicsHelper.ApplyGravity (this, planet);
 						//}
 						if (!isRotating) {
-								Vector3 dist = rigidbody.transform.position - planet.rigidbody.transform.position; 
+								Vector3 dist = GetComponent<Rigidbody>().transform.position - planet.GetComponent<Rigidbody>().transform.position; 
 //								float r = dist.magnitude / 2;
 //								float v = planet.rigidbody.velocity.magnitude;
 								transform.RotateAround (planet.transform.position, rotDir * Vector3.forward, movementSpeed * Time.deltaTime);
@@ -68,7 +68,7 @@ public class PlanetScript : AstronomicalObject, IDestroyable
 
 				
 						// if the object has a planet script, is destructable and a lower mass, then process it
-						if (!otherPlanet.isIndestructible && otherPlanet.rigidbody.mass <= rigidbody.mass) {
+						if (!otherPlanet.isIndestructible && otherPlanet.GetComponent<Rigidbody>().mass <= GetComponent<Rigidbody>().mass) {
 
 				
 								//Debug.Log ("on collision enter");

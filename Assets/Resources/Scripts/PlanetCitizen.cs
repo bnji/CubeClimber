@@ -20,12 +20,12 @@ public abstract class PlanetCitizen : MonoBehaviour
 
 		protected void ResetDrag ()
 		{
-				rigidbody.drag = initialDrag;
+				GetComponent<Rigidbody>().drag = initialDrag;
 		}
 
 		protected void ResetMass ()
 		{
-				rigidbody.mass = initialMass;
+				GetComponent<Rigidbody>().mass = initialMass;
 		}
 
 
@@ -43,8 +43,8 @@ public abstract class PlanetCitizen : MonoBehaviour
 
 		protected void Initialize ()
 		{
-				initialDrag = rigidbody.drag;
-				initialMass = rigidbody.mass;
+				initialDrag = GetComponent<Rigidbody>().drag;
+				initialMass = GetComponent<Rigidbody>().mass;
 				transform.localScale = newScale;
 				newScaleConstant = newScale.x;
 				playerPlanetScript = GetComponent<PlanetScript> ();

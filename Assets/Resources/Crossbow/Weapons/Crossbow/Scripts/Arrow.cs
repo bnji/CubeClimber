@@ -121,7 +121,7 @@ public class Arrow : MonoBehaviour, IProjectile
 						if (!hasCollided) {
 //								print (transform.name + " collided with " + collision.collider.name);
 								Time.timeScale = 1.0f;
-								rigidbody.constraints = RigidbodyConstraints.FreezeAll; // freeze the arrow in place
+								GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeAll; // freeze the arrow in place
 			
 								if (jointType == JointType.Ball)
 										gameObject.AddComponent<CharacterJoint> ();
@@ -146,7 +146,7 @@ public class Arrow : MonoBehaviour, IProjectile
 						grabbableScript = (IGrabbable)target.GetComponent (typeof(IGrabbable));
 						if (grabbableScript != null) {
 //								print ("is grabbable");
-								rigidbody.constraints = RigidbodyConstraints.FreezeAll;
+								GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeAll;
 								grabbableScript.Grab ();
 						} else {
 								Destroy (transform.gameObject);

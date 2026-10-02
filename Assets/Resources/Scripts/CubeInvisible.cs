@@ -50,7 +50,7 @@ public class CubeInvisible : CubeBase
 
 		public void SetRandomColor ()//Color[] _colors)
 		{
-				renderer.material.color = gh.GetRandomColor ();
+				GetComponent<Renderer>().material.color = gh.GetRandomColor ();
 		}
 	
 		public bool CanAdd ()
@@ -74,7 +74,7 @@ public class CubeInvisible : CubeBase
 						var cube = go.GetComponent<Cube> ();
 						(cube as IDestroyable).IsDestroyable = true;
 //						Debug.Log (renderer.material.color);
-						cube.transform.renderer.material.color = gh.lastUsedColor;// renderer.material.color;
+						cube.transform.GetComponent<Renderer>().material.color = gh.lastUsedColor;// renderer.material.color;
 						cube.transform.parent = transform;
 //						cube.SetSparkleState (false);
 						Destroy (cube.GetComponentInChildren<GravitationalField> ().gameObject);

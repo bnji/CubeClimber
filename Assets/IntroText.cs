@@ -19,7 +19,7 @@ public class IntroText : MonoBehaviour
 		void Start ()
 		{
 				textMesh = GetComponent<TextMesh> ();
-				color = renderer.material.GetColor ("_Color");
+				color = GetComponent<Renderer>().material.GetColor ("_Color");
 				SetText ();
 		}
 
@@ -30,7 +30,7 @@ public class IntroText : MonoBehaviour
 								SetText ();
 						} else {
 								alpha = alpha > 0f ? alpha - textFadeSpeed : alpha;// alpha - Time.deltaTime * timeForEachText * textFadeSpeed : alpha;
-								renderer.material.SetColor ("_Color", new Color (color.r, color.g, color.b, alpha));
+								GetComponent<Renderer>().material.SetColor ("_Color", new Color (color.r, color.g, color.b, alpha));
 						}
 				}
 		}
@@ -46,8 +46,8 @@ public class IntroText : MonoBehaviour
 				SetRandomPositionWithinBoundaries ();
 				index++;
 				lastTime = Time.time;
-				renderer.material.SetColor ("_Color", color);
-				alpha = renderer.material.GetColor ("_Color").a;
+				GetComponent<Renderer>().material.SetColor ("_Color", color);
+				alpha = GetComponent<Renderer>().material.GetColor ("_Color").a;
 				textFadeSpeed = Time.deltaTime / timeForEachText;
 		}
 

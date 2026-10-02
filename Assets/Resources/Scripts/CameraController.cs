@@ -32,8 +32,8 @@ public class CameraController : MonoSingleton<CameraController>
 				_cameraList.ForEach ((Camera camera) => {
 						if (!camera.name.Equals (mainCamera.name)) {
 								camera.depth = -1; // Make sure the camera is under the main camera ('disable' it)
-								if (camera.audio != null)
-										camera.audio.enabled = false; // Disable audio listener
+								if (camera.GetComponent<AudioSource>() != null)
+										camera.GetComponent<AudioSource>().enabled = false; // Disable audio listener
 //								camera.rect = tempNormalizedViewPortRect;
 						}
 						cameraList.Add (camera);
@@ -73,7 +73,7 @@ public class CameraController : MonoSingleton<CameraController>
 		/// </param>
 		public Camera GetCamera (string _cameraName)
 		{
-				return cameraList.Find ((Camera ct) => ct.camera.name == _cameraName).camera;
+				return cameraList.Find ((Camera ct) => ct.GetComponent<Camera>().name == _cameraName).GetComponent<Camera>();
 		}
 	
 		public void ChangeCamera (string cameraName)
@@ -90,8 +90,8 @@ public class CameraController : MonoSingleton<CameraController>
 				activeCamera.depth = -1;
 				// Set the camera back to taking up the full screen
 //				activeCamera.rect = tempNormalizedViewPortRect;
-				if (activeCamera.audio != null)
-						activeCamera.audio.enabled = false;
+				if (activeCamera.GetComponent<AudioSource>() != null)
+						activeCamera.GetComponent<AudioSource>().enabled = false;
 				
 				// Set the found camera as the active camera
 				if (newCamera.name.Equals (activeCamera.name)) {
@@ -110,8 +110,8 @@ public class CameraController : MonoSingleton<CameraController>
 				// Set the camera back to taking up the full screen
 				activeCamera.rect = new Rect (0, 0, 1, 1);
 				// Do changes to the camera we have changed to...
-				if (activeCamera.audio != null)
-						activeCamera.audio.enabled = true;
+				if (activeCamera.GetComponent<AudioSource>() != null)
+						activeCamera.GetComponent<AudioSource>().enabled = true;
 		
 
 		}

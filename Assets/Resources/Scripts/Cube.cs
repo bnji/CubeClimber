@@ -37,13 +37,13 @@ public class Cube : CubeBase, IDestroyable
 		public void SetColor (Color color)
 		{
 				//				renderer.material.shader = Shader.Find ("Specular");
-				renderer.material.SetColor ("_Color", color);
+				GetComponent<Renderer>().material.SetColor ("_Color", color);
 		}
 
 		public void ResetColor ()
 		{
 				//				renderer.material.shader = Shader.Find ("Specular");
-				renderer.material.SetColor ("_Color", _startColor);
+				GetComponent<Renderer>().material.SetColor ("_Color", _startColor);
 		}
 
 //		public void SetVisible (bool visible)
@@ -104,7 +104,7 @@ public class Cube : CubeBase, IDestroyable
 
 		void Start ()
 		{
-				_startColor = renderer.material.GetColor ("_Color");
+				_startColor = GetComponent<Renderer>().material.GetColor ("_Color");
 		}
 
 		// Update is called once per frame

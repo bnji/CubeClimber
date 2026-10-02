@@ -34,7 +34,7 @@ public class SpaceCharacterController : MonoBehaviour
 	
 		public float CurrentVelocity {
 				get {
-						return rigidbody.velocity.sqrMagnitude;
+						return GetComponent<Rigidbody>().velocity.sqrMagnitude;
 				}
 		}
 
@@ -151,7 +151,7 @@ public class SpaceCharacterController : MonoBehaviour
 //				Vector3 from = new Vector3(transform.position.x, transform.position.y, tran);
 //				Vector3 to = new Vector3 (currentPlanet.transform.position.x, currentPlanet.transform.position.y);
 				JumpDirection = transform.position - currentPlanet.transform.position;
-				rigidbody.AddForce (JumpDirection * jumpPower * Time.deltaTime);
+				GetComponent<Rigidbody>().AddForce (JumpDirection * jumpPower * Time.deltaTime);
 				Detach ();
 		}
 

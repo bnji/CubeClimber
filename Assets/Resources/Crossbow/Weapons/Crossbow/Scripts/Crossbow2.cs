@@ -122,7 +122,7 @@ public class Crossbow2 : MonoBehaviour, IWeapon, ICarriable
 	
 		void PlaySound (AudioClip clip)
 		{
-				audio.PlayOneShot (clip);
+				GetComponent<AudioSource>().PlayOneShot (clip);
 		}
 	
 		void SpawnArrow (Transform arrowPrefab, Vector3 _endPosition, Transform _owner, GameObject _target)
@@ -318,7 +318,7 @@ public class Crossbow2 : MonoBehaviour, IWeapon, ICarriable
 						Debug.Log (weaponHolderMouseLook);
 						weaponHolderMouseLook.enabled = true;
 						weaponHolderMouseLook.axes = MouseLook.RotationAxes.MouseXAndY;			
-						joint.connectedBody = Player.rigidbody;
+						joint.connectedBody = Player.GetComponent<Rigidbody>();
 						WeaponHolderBody.position = Player.position; // Use the player's position
 						WeaponHolderBody.constraints = RigidbodyConstraints.FreezeRotationY;
 						ChangeCamera ();

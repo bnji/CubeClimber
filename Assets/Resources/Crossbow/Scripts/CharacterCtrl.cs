@@ -87,7 +87,7 @@ public class CharacterCtrl : MonoBehaviour {
             if (Physics.Raycast(transform.position, Vector3.down, out hit) && !inWater)
             {
                 //print(hit.distance);
-                if (hit.distance < (collider.bounds.size.y / 2 + 1.0f))
+                if (hit.distance < (GetComponent<Collider>().bounds.size.y / 2 + 1.0f))
                 {
                     isGrounded = true;
                     hasJumped = false;
